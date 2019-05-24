@@ -6,24 +6,20 @@ yarn install
 ```
 
 ### Compiles and hot-reloads for development
+
+#### Frontend
+
 ```
 yarn run serve
 ```
 
-### Compiles and minifies for production
+#### Backend
 ```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
+node server.js
+OR
+nodemon server.js (for hot reloading)
 ```
 
-### Lints and fixes files
-```
-yarn run lint
-```
+### Note
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Currently only contains Self Assessment APIs. Needs UI redesign as currently pretty ugly. Add new APIs to `src/data.js`.
