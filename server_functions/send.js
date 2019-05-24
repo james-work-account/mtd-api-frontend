@@ -17,7 +17,7 @@ const getResponse = async (url, body, headers, {
 }) => {
   try {
     if (method === "POST") {
-      await axios.post(url, JSON.parse(body["Body"]), {
+      return await axios.post(url, JSON.parse(body["Body"]), {
           headers
         })
         .then(resp => {
@@ -33,7 +33,7 @@ const getResponse = async (url, body, headers, {
           }
         })
     } else if (method === "PUT") {
-      await axios.put(url, JSON.parse(body["Body"]), {
+      return await axios.put(url, JSON.parse(body["Body"]), {
           headers
         })
         .then(resp => {
@@ -49,7 +49,7 @@ const getResponse = async (url, body, headers, {
           }
         })
     } else if (method === "GET") {
-      await axios.get(url, {
+      return await axios.get(url, {
           'headers': headers
         })
         .then(resp => {
@@ -66,11 +66,12 @@ const getResponse = async (url, body, headers, {
         })
     }
   } catch (error) {
-    return getError(error)
+    return getFallbackError(error)
   }
 }
 
-const getError = (error) => {
+
+const getFallbackError = (error) => {
   if (error.name === "SyntaxError") {
     // malformed JSON - JSON.parse has failed
     return {

@@ -46,6 +46,7 @@ app.post('/send', async (req, res) => {
     headers["Content-Type"] = body["Content-Type"]
   }
 
+  // Add Gov-Test-Scenario
   if (body["Gov-Test-Scenario"] && body["Gov-Test-Scenario"].length !== 0) {
     headers["Gov-Test-Scenario"] = body["Gov-Test-Scenario"]
   }
