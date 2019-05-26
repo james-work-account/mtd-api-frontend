@@ -1,7 +1,7 @@
 <template>
-  <pre>
-    <code>{{body}}</code>
-  </pre>
+  <output form="form-input" name="form-output">
+    <pre><code>{{body}}</code></pre>
+  </output>
 </template>
 
 <script>

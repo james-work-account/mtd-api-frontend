@@ -1,14 +1,17 @@
 <template>
-  <div class="body">
-    <h1>{{queryData["header-url"]}}</h1>
+  <section class="body">
+    <section class="heading">
+      <h1>{{this.$route.params.page}}</h1>
+      <h2>{{queryData["header-url"]}}</h2>
+    </section>
     <InputForm :submitRequest="submitRequest"/>
     <OutputField :body="output"/>
-  </div>
+  </section>
 </template>
 
 <script>
-import InputForm from "@/components/InputForm";
-import OutputField from "@/components/OutputField";
+import InputForm from "@/components/form/InputForm";
+import OutputField from "@/components/form/OutputField";
 import Api from "@/services/Api";
 import { mapGetters } from "vuex";
 import axios from "axios";
@@ -48,27 +51,16 @@ export default {
 </script>
 
 <style>
+.heading h1 {
+  font-size: 32px;
+}
+.heading h2 {
+  margin-bottom: 1em;
+}
 .body {
   padding: 1em 2em 0;
 }
 .body h1 {
   margin-bottom: 0.5em;
-}
-.input-data .not-button {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.params {
-  border-right: #2c3e50 solid 1px;
-  text-align: right;
-  padding: 1em 2em;
-}
-.headers {
-  text-align: left;
-  padding: 1em 2em;
-}
-.inputs {
-  display: grid;
-  grid-template-columns: 1fr;
 }
 </style>

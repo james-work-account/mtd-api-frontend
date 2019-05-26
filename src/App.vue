@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <Header/>
-    <div id="main">
+    <main>
       <NavBar/>
-      <router-view/>
-    </div>
+      <router-view class="content"/>
+    </main>
   </div>
 </template>
 
@@ -35,10 +35,15 @@ export default {
   height: 100vh;
 }
 
-#main {
+main {
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1fr 4fr;
   min-height: calc(100vh - var(--header-size));
   margin-top: var(--header-size);
+}
+
+.content {
+  border-left: #2c3e50 solid 1px;
+  min-height: 100vh;
 }
 </style>
