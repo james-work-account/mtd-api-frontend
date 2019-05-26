@@ -38,4 +38,7 @@ export default {
   color: #fff;
   text-decoration: none;
 }
+.header h1 {
+  padding-left: 1em;
+}
 </style>
