@@ -22,4 +22,4 @@ nodemon server.js (for hot reloading)
 
 ### Note
 
-Currently only contains Self Assessment APIs. Needs UI redesign as currently pretty ugly. Add new APIs to `src/data.js`.
+Needs UI redesign as currently pretty ugly. Add new APIs to `src/data.js`.

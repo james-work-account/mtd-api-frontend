@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer')
 const generateUser = async () => {
   const url =
     "https://test-api.service.hmrc.gov.uk/create-test-user/individuals";
-  const body = JSON.parse(`{"serviceNames":["mtd-income-tax"]}`);
+  const body = JSON.parse(`{"serviceNames":["mtd-income-tax", "mtd-vat"]}`);
   const headers = {
     Accept: "application/vnd.hmrc.1.0+json",
     Authorization: "Bearer db8e884897a9347426f6a2c94dca566",
@@ -19,8 +19,12 @@ const generateUser = async () => {
 const grantAccess = async (userId, password) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+
+  const saScopes = "read:self-assessment+write:self-assessment+write:sent-invitations"
+  const vatScopes = "read:vat+write:vat+write:sent-invitations"
+
   // Landing page
-  await page.goto("https://test-www.tax.service.gov.uk/oauth/authorize?client_id=5Z9oOif4hw8hlZlWXIwUH0YBwKsa&scope=read:self-assessment+write:self-assessment+write:sent-invitations&response_type=code&redirect_uri=http://localhost:9000&state=12345")
+  await page.goto(`https://test-www.tax.service.gov.uk/oauth/authorize?client_id=5Z9oOif4hw8hlZlWXIwUH0YBwKsa&scope=${saScopes}+${vatScopes}&response_type=code&redirect_uri=http://localhost:9000&state=12345`)
   await Promise.all([
     page.click(".button"),
     page.waitForNavigation()

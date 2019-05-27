@@ -4,7 +4,7 @@
       <li v-for="name in dataKeys" :key="name">
         <router-link class="nav-item" :to="{ name: 'page', params: { page: name }}">
           <div class="name">{{ name }}</div>
-          <div class="type" :class="[data(name).grouping]">{{data(name)["grouping"]}}</div>
+          <div class="type" :class="[data(name).grouping]">{{data(name).grouping}}</div>
         </router-link>
       </li>
     </ul>
@@ -16,13 +16,6 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "navbar",
-  data() {
-    return {
-      window: {
-        width: 0
-      }
-    };
-  },
   computed: {
     ...mapGetters(["dataKeys", "data"])
   }
@@ -78,17 +71,20 @@ nav ul a.router-link-exact-active {
   transition: var(--transition);
 }
 
-nav ul a.router-link-exact-active .TaxCalc {
+nav ul a.router-link-exact-active .TaxCalc,
+nav ul a.router-link-exact-active .Obli {
   background-color: #f85888;
   border: 1px solid #a13959;
 }
 
-nav ul a.router-link-exact-active .PropertyEOPS {
+nav ul a.router-link-exact-active .PropertyEOPS,
+nav ul a.router-link-exact-active .Retu {
   background-color: #c03028;
   border: 1px solid #7d1f1a;
 }
 
-nav ul a.router-link-exact-active .SEEOPS {
+nav ul a.router-link-exact-active .SEEOPS,
+nav ul a.router-link-exact-active .PayLi {
   background-color: #f08030;
   border: 1px solid #9c531f;
 }

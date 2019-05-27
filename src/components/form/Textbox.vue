@@ -19,9 +19,13 @@ export default {
   name: "textbox",
   props: ["param"],
   computed: {
-    ...mapGetters([]),
+    ...mapGetters(["grouping"]),
     defaultValue() {
-      return store.state[this.param];
+      if (store.state[this.grouping][this.param]) {
+        return store.state[this.grouping][this.param];
+      } else {
+        return store.state[this.param];
+      }
     }
   }
 };

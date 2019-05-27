@@ -4,7 +4,7 @@
       <FormSectionParams class="params" :params="params" :queryData="queryData"/>
       <FormSectionHeaders class="headers" :queryData="queryData"/>
     </div>
-    <button type="submit">Send Request</button>
+    <button type="submit" :disabled="disabled">Send Request</button>
   </form>
 </template>
 
@@ -15,7 +15,7 @@ import FormSectionParams from "@/components/form/FormSectionParams";
 
 export default {
   name: "input-form",
-  props: ["submitRequest"],
+  props: ["submitRequest", "disabled"],
   components: { FormSectionHeaders, FormSectionParams },
   computed: {
     ...mapGetters(["data"]),
@@ -62,5 +62,10 @@ button[type="submit"] {
 button[type="submit"]:hover,
 button[type="submit"]:active {
   background: #888;
+}
+button[type="submit"]:disabled {
+  background: #888;
+  border: 1px solid #888;
+  color: #ccc;
 }
 </style>

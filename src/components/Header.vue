@@ -3,16 +3,19 @@
     <h1>
       <router-link :to="{ name: 'home'}">URL Helper</router-link>
     </h1>
+    <ApiGroupingToggle/>
     <GenerateOAuth/>
   </header>
 </template>
 
 <script>
 import GenerateOAuth from "@/components/GenerateOAuth";
+import ApiGroupingToggle from "@/components/ApiGroupingToggle";
 
 export default {
   components: {
-    GenerateOAuth
+    GenerateOAuth,
+    ApiGroupingToggle
   }
 };
 </script>
@@ -20,7 +23,7 @@ export default {
 <style>
 .header {
   display: grid;
-  grid-template-columns: 8fr 2fr;
+  grid-template-columns: 4fr 4fr 2fr;
   align-items: center;
   padding: 0 1em;
   background-color: #000;

@@ -19,11 +19,13 @@ app.get('/generate', async (req, res) => {
     userId,
     password,
     mtdItId,
-    nino
+    nino,
+    vrn
   } = user
   const oauthToken = await generate.grantAccess(userId, password)
   const accessToken = await generate.requestAccessToken(oauthToken)
   const response = {
+    vrn,
     nino,
     mtdItId,
     accessToken

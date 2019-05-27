@@ -1,13 +1,30 @@
 const data = require('../src/data')
 const axios = require('axios')
 
-const baseURL = "https://test-api.service.hmrc.gov.uk/self-assessment/ni"
+const baseURL = (apiGrouping) => {
+  switch (apiGrouping) {
+    case "self-assessment":
+      return "https://test-api.service.hmrc.gov.uk/self-assessment/ni"
+    case "vat":
+      return "https://test-api.service.hmrc.gov.uk/organisations/vat"
+    default:
+      return "um no"
+  }
 
-const getUrl = (body, queryParameters) => {
-  const requestUrl = data[queryParameters.request]["header-url"]
-  let url = baseURL + requestUrl;
+}
+
+const getUrl = (body, {
+  request,
+  apiGrouping
+}) => {
+  const requestUrl = data[apiGrouping][request]["header-url"]
+  let url = baseURL(apiGrouping) + requestUrl;
   for (key in body) {
-    url = url.replace(`{${key}}`, body[key])
+    if (body[key].length !== 0) {
+      url = url.replace(`{${key}}`, body[key])
+    } else {
+      url = url.replace(`${key}={${key}}`, body[key])
+    }
   }
   return url
 }

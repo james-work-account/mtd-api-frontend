@@ -4,7 +4,7 @@
       <h1>{{this.$route.params.page}}</h1>
       <h2>{{queryData["header-url"]}}</h2>
     </section>
-    <InputForm :submitRequest="submitRequest"/>
+    <InputForm :submitRequest="submitRequest" :disabled="buttonIsDisabled"/>
     <OutputField :body="output"/>
   </section>
 </template>
@@ -21,11 +21,13 @@ export default {
   components: { InputForm, OutputField },
   data() {
     return {
-      output: {}
+      output: {},
+      buttonIsDisabled: false
     };
   },
   methods: {
     async submitRequest(e) {
+      this.buttonIsDisabled = true;
       const form = document.querySelector("form");
       const formdata = new FormData(form);
       let jsonObject = {};
@@ -35,14 +37,15 @@ export default {
       const res = await Api().post(
         `/send?method=${this.queryData.method}&request=${
           this.$route.params.page
-        }`,
+        }&apiGrouping=${this.grouping}`,
         jsonObject
       );
       this.output = res.data;
+      this.buttonIsDisabled = false;
     }
   },
   computed: {
-    ...mapGetters(["data"]),
+    ...mapGetters(["data", "grouping"]),
     queryData() {
       return this.data(this.$route.params.page);
     }
