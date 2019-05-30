@@ -1,7 +1,8 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
+    es6: true
   },
   'extends': [],
   rules: {
@@ -9,6 +10,8 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    "sourceType": "module",
+    parser: 'babel-eslint',
+    "ecmaVersion": 2017
   }
 }

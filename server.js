@@ -13,6 +13,9 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 
+const staticFileMiddleware = express.static(__dirname + '/dist')
+app.use(staticFileMiddleware)
+
 app.get('/generate', async (req, res) => {
   const user = await generate.generateUser()
   const {
@@ -57,4 +60,4 @@ app.post('/send', async (req, res) => {
   res.send(response)
 })
 
-app.listen(process.env.PORT || 8081)
+app.listen(process.env.PORT || 8080)

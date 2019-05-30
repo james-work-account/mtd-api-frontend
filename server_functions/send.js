@@ -38,52 +38,48 @@ const getResponse = async (url, body, headers, {
           headers
         })
         .then(resp => {
-          return {
-            status: resp.status,
-            data: resp.data
-          }
+          return getSuccess(resp)
         })
         .catch(error => {
-          return {
-            status: error.response.status,
-            data: error.response.data
-          }
+          return getError(error)
         })
     } else if (method === "PUT") {
       return await axios.put(url, JSON.parse(body["Body"]), {
           headers
         })
         .then(resp => {
-          return {
-            status: resp.status,
-            data: resp.data
-          }
+          return getSuccess(resp)
         })
         .catch(error => {
-          return {
-            status: error.response.status,
-            data: error.response.data
-          }
+          return getError(error)
         })
     } else if (method === "GET") {
       return await axios.get(url, {
-          'headers': headers
+          headers
         })
         .then(resp => {
-          return {
-            status: resp.status,
-            data: resp.data
-          }
+          return getSuccess(resp)
         })
         .catch(error => {
-          return {
-            status: error.response.status,
-            data: error.response.data
-          }
+          return getError(error)
         })
     }
   } catch (error) {
     return getFallbackError(error)
+  }
+}
+
+const getSuccess = (resp) => {
+  return {
+    status: resp.status,
+    data: resp.data
+  }
+}
+
+const getError = (error) => {
+  return {
+    status: error.response.status,
+    data: error.response.data
   }
 }
 

@@ -17,7 +17,10 @@ const generateUser = async () => {
 }
 
 const grantAccess = async (userId, password) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox']
+  });
   const page = await browser.newPage();
 
   const saScopes = "read:self-assessment+write:self-assessment+write:sent-invitations"
