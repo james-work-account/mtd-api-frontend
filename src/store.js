@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import data from '@/data'
+import data from '@/data/data'
 
 Vue.use(Vuex)
 

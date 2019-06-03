@@ -2,7 +2,7 @@
   <section>
     <h3>Headers:</h3>
     <div class="inputs">
-      <Textbox v-for="param in queryData.headers" :key="param" :param="param"/>
+      <Textbox v-for="param in queryData.headers" :key="param" :param="param" :isHeaders="true"/>
     </div>
   </section>
 </template>

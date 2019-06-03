@@ -61,7 +61,7 @@ export default {
   margin-bottom: 1em;
 }
 .body {
-  padding: 1em 2em 0;
+  padding: 1em 2em 2em;
 }
 .body h1 {
   margin-bottom: 0.5em;
