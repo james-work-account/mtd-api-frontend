@@ -1,6 +1,15 @@
 # mtd-api-frontend
 
-## Project setup
+## Run with Docker
+```
+docker run -p 8080:8080 jamesworkaccount/express-app
+```
+
+---
+
+## Run locally
+
+### Project setup
 ```
 yarn install
 ```
@@ -19,6 +28,8 @@ node server.js
 OR
 nodemon server.js (for hot reloading)
 ```
+
+---
 
 ## Adding new APIs
 
@@ -57,6 +68,8 @@ nodemon server.js (for hot reloading)
   - Variables will be automatically pulled out of the `header-url` if you wrap the variable in curly braces (`{}`)
   - A Body will automatically be made available if the method is `POST` or `PUT`
   - If the `grouping` doesn't exist, make sure you make the NavBar entry look pretty with some nice CSS in `src/components/NavBar.vue`
+
+---
 
 ## Note
 
