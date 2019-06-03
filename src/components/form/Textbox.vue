@@ -2,14 +2,18 @@
   <div class="input">
     <label :for="param" @click="toggleList">
       {{param}}
-      <i v-if="isGovTestScenario" class="fas fa-caret-down"></i>
+      <i
+        v-if="isGovTestScenario"
+        class="fas fa-caret-down"
+        :class="{clicked : showScenarios}"
+      ></i>
     </label>
     <input
       v-if="isGovTestScenario"
       type="text"
       :id="param"
       :name="param"
-      :placeholder="'Enter a valid ' + param + '...'"
+      :placeholder="'Enter or select a valid ' + param + '...'"
       :value="govTestValue"
       :class="{ left : isHeaders }"
     >
@@ -88,7 +92,6 @@ div.input input {
   width: 25em;
   font-size: 14px;
 }
-
 ul#scenarios {
   display: none;
   list-style: none;
@@ -102,5 +105,12 @@ ul#scenarios.display {
 ul#scenarios li:hover {
   cursor: pointer;
   background: #ccc;
+}
+.fa-caret-down {
+  transform: rotate(-90deg);
+  transition: 0.25s ease;
+}
+.fa-caret-down.clicked {
+  transform: rotate(0deg);
 }
 </style>
