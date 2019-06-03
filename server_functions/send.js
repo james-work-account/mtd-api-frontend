@@ -1,4 +1,4 @@
-const data = require('../src/data')
+const data = require('../src/data/data')
 const axios = require('axios')
 
 const baseURL = (apiGrouping) => {

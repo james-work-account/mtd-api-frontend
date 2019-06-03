@@ -18,4 +18,8 @@ pre code {
   padding: 20px;
   text-align: left;
 }
+output[name="form-output"] pre code {
+  max-width: calc(80vw - 5em); /* main width - padding */
+  overflow-x: auto;
+}
 </style>
