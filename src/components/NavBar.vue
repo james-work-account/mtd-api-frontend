@@ -126,8 +126,7 @@ nav ul a.router-link-exact-active .Cryst {
 }
 @media (min-width: 1281px) {
   nav ul {
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 @media (max-width: 1280px) {
@@ -178,7 +177,6 @@ nav ul a.router-link-exact-active .Cryst {
   }
   .show {
     display: block;
-    transition: var(--transition);
   }
   .type {
     margin: 10px 0;

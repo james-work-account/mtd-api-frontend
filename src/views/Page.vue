@@ -62,6 +62,7 @@ export default {
 }
 .body {
   padding: 1em 2em 2em;
+  min-height: calc(100vh - 9em);
 }
 .body h1 {
   margin-bottom: 0.5em;

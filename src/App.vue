@@ -42,13 +42,11 @@ main {
 }
 .content {
   border-left: #2c3e50 solid 1px;
-  height: calc(100vh - 9em);
+  min-height: calc(100vh - 6em);
 }
 @media (min-width: 1281px) {
   .content {
-    overflow: scroll;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 @media (max-width: 1280px) {

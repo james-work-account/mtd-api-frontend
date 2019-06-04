@@ -34,7 +34,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 1fr;
-  padding-right: 5em;
   align-items: center;
 }
 .api-grouping-toggle li {
@@ -59,6 +58,27 @@ export default {
 @media (max-width: 626px) {
   .api-grouping-toggle {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 680px) {
+  .api-grouping-toggle::before {
+    padding-left: 1em;
+    color: #fff;
+    content: "Choose an API grouping:";
+    font-weight: bold;
+  }
+  .api-grouping-toggle::after {
+    padding-left: 1em;
+    color: #fff;
+    content: "Generate new OAuth Data:";
+    font-weight: bold;
+  }
+  .api-grouping-toggle {
+    grid-template-columns: 1fr;
+    padding: 0 1em;
+  }
+  .api-grouping-toggle li {
+    float: none;
   }
 }
 </style>
