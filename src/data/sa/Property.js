@@ -1,3 +1,5 @@
+const stripIndent = require('common-tags/lib/stripIndent')
+
 module.exports = {
   "Retrieve EOPS Obligations": {
     "header-url": "/{nino}/uk-properties/end-of-period-statements/obligations?from={from}&to={to}",
@@ -21,6 +23,10 @@ module.exports = {
       "NOT_FOUND", "RULE_ALREADY_SUBMITTED", "RULE_EARLY_SUBMISSION", "RULE_LATE_SUBMISSION", "RULE_MISMATCH_START_DATE", "RULE_MISMATCH_END_DATE",
       "RULE_CLASS4_OVER_16", "RULE_CLASS4_PENSION_AGE", "RULE_CONSOLIDATED_EXPENSES", "RULE_FHL_PRIVATE_USE_ADJUSTMENT", "RULE_NON_FHL_PRIVATE_USE_ADJUSTMENT",
       "MULTIPLE_ERRORS", "MULTIPLE_BUSINESS_ERRORS"
-    ]
+    ],
+    "body": stripIndent(`
+    {
+      "finalised": true
+    }`)
   }
 }

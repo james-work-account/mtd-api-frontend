@@ -1,3 +1,5 @@
+const stripIndent = require('common-tags/lib/stripIndent')
+
 module.exports = {
   "Add a UK savings account": {
     "header-url": "/{nino}/savings-accounts",
@@ -8,7 +10,11 @@ module.exports = {
     ],
     "scenarios": [
       "MAX_ACCOUNTS_LIMIT", "DUPLICATE_ACCOUNT_NAME"
-    ]
+    ],
+    "body": stripIndent(`
+    {
+      "accountName": "My savings account"
+    }`)
   },
   "List all UK savings accounts": {
     "header-url": "/{nino}/savings-accounts",
@@ -41,7 +47,12 @@ module.exports = {
     ],
     "scenarios": [
       "NOT_FOUND"
-    ]
+    ],
+    "body": stripIndent(`
+    {
+      "taxedUkInterest": 1230.12,
+      "untaxedUkInterest": 500.02
+    }`)
   },
   "Retrieve annual summary": {
     "header-url": "/{nino}/savings-accounts/{accountId}/{dateRange}",

@@ -1,3 +1,5 @@
+const stripIndent = require('common-tags/lib/stripIndent')
+
 module.exports = {
   "Trigger a tax calculation v1.0": {
     "header-url": "/{nino}/calculations",
@@ -8,7 +10,11 @@ module.exports = {
     ],
     "scenarios": [
       "AGENT_NOT_SUBSCRIBED", "AGENT_NOT_AUTHORIZED", "CLIENT_NOT_SUBSCRIBED"
-    ]
+    ],
+    "body": stripIndent(`
+    {
+      "taxYear": "2017-18"
+    }`)
   },
   "Retrieve a tax calculation": {
     "header-url": "/{nino}/calculations/{calculationId}",

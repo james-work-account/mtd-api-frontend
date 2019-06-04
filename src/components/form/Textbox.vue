@@ -28,12 +28,8 @@
     >
 
     <ul :class="{ display : showScenarios }" v-if="isGovTestScenario" id="scenarios">
-      <li
-        @click="changeSelected"
-        v-for="scenario in govTestArray"
-        :key="scenario"
-        :value="scenario"
-      >{{scenario}}</li>
+      <li @click="clearSelected">&lt;CLEAR&gt;</li>
+      <li @click="changeSelected" v-for="scenario in govTestArray" :key="scenario">{{scenario}}</li>
     </ul>
   </div>
 </template>
@@ -58,6 +54,10 @@ export default {
     },
     changeSelected(e) {
       this.govTestValue = e.target.innerHTML;
+      this.toggleList();
+    },
+    clearSelected() {
+      this.govTestValue = "";
       this.toggleList();
     }
   },

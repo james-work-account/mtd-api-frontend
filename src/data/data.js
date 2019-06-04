@@ -1,6 +1,6 @@
 const selfAssessment = {
   TaxCalc: require('./sa/TaxCalc'),
-  EOPS: require('./sa/EOPS'),
+  EOPS: require('./sa/SelfEmployment'),
   Property: require('./sa/Property'),
   CharGiv: require('./sa/CharGiv'),
   DivInc: require('./sa/DivInc'),
