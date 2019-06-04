@@ -6,7 +6,7 @@
       <div></div>
     </div>
     <ul>
-      <li v-for="name in dataKeys" :key="name" @click="toggleNav">
+      <li v-for="name in dataKeys" :key="name" @click="closeNav">
         <router-link class="nav-item" :to="{ name: 'page', params: { page: name }}">
           <div class="name">{{ name }}</div>
           <div class="type" :class="[data(name).grouping]">{{data(name).grouping}}</div>
@@ -25,6 +25,10 @@ export default {
     toggleNav() {
       document.querySelector("nav ul").classList.toggle("show");
       document.querySelector(".burger").classList.toggle("clicked");
+    },
+    closeNav() {
+      document.querySelector("nav ul").classList.remove("show");
+      document.querySelector(".burger").classList.remove("clicked");
     }
   },
   computed: {
