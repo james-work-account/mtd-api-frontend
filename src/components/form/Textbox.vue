@@ -113,4 +113,23 @@ ul#scenarios li:hover {
 .fa-caret-down.clicked {
   transform: rotate(0deg);
 }
+@media (max-width: 1572px) {
+  div.input {
+    display: grid;
+  }
+  div.input input {
+    margin-left: auto;
+  }
+  div.input .left {
+    margin-left: 0;
+  }
+}
+@media (max-width: 1190px) {
+  div.input label {
+    margin-bottom: 0.5em;
+  }
+  div.input input {
+    width: 100%;
+  }
+}
 </style>

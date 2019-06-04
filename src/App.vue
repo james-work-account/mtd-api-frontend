@@ -32,18 +32,34 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100vh;
+  height: calc(100vh - 9em);
 }
-
 main {
   display: grid;
-  grid-template-columns: 1fr 4fr;
-  min-height: calc(100vh - var(--header-size));
+  grid-template-columns: 1fr 3fr;
+  height: calc(100vh - var(--header-size));
   margin-top: var(--header-size);
 }
-
 .content {
   border-left: #2c3e50 solid 1px;
-  min-height: 100vh;
+  min-height: calc(100vh - 6em);
+}
+@media (min-width: 1281px) {
+  .content {
+    overflow-y: auto;
+  }
+}
+@media (max-width: 1280px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  .content {
+    border-left: none;
+  }
+}
+@media (max-width: 680px) {
+  .content {
+    margin-top: 30px;
+  }
 }
 </style>

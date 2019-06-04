@@ -62,8 +62,24 @@ export default {
 }
 .body {
   padding: 1em 2em 2em;
+  min-height: calc(100vh - 9em);
 }
 .body h1 {
   margin-bottom: 0.5em;
+}
+@media (max-width: 680px) {
+  .body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+@media (max-width: 626px) {
+  .heading h1 {
+    font-size: 24px;
+  }
+  .heading h2 {
+    font-size: 20px;
+    margin-bottom: 0;
+  }
 }
 </style>

@@ -3,19 +3,16 @@
     <h1>
       <router-link :to="{ name: 'home'}">URL Helper</router-link>
     </h1>
-    <ApiGroupingToggle/>
-    <GenerateOAuth/>
+    <HeaderMenu class="header-menu"/>
   </header>
 </template>
 
 <script>
-import GenerateOAuth from "@/components/GenerateOAuth";
-import ApiGroupingToggle from "@/components/ApiGroupingToggle";
+import HeaderMenu from "@/components/HeaderMenu";
 
 export default {
   components: {
-    GenerateOAuth,
-    ApiGroupingToggle
+    HeaderMenu
   }
 };
 </script>
@@ -23,7 +20,7 @@ export default {
 <style>
 .header {
   display: grid;
-  grid-template-columns: 4fr 4fr 2fr;
+  grid-template-columns: 2fr 6fr;
   align-items: center;
   padding: 0 1em;
   background-color: #000;
@@ -31,10 +28,10 @@ export default {
   position: fixed; /* Set the navbar to fixed position */
   top: 0;
   width: calc(100% - 2em);
+  z-index: 4;
 }
 .header * {
   text-align: left;
-  margin: 0.5em 0;
 }
 .header h1,
 .header h1 * {
@@ -43,5 +40,46 @@ export default {
 }
 .header h1 {
   padding-left: 1em;
+}
+.header-menu {
+  display: grid;
+  grid-template-columns: 1fr 9fr;
+  margin: 0;
+}
+@media (max-width: 1073px) {
+  .header {
+    grid-template-columns: 1fr 5fr;
+    grid-column-gap: 1em;
+    padding-left: 0;
+    width: calc(100% - 1em);
+  }
+  .header :not(a) {
+    font-size: 17px;
+  }
+  .header h1 {
+    font-size: 24px;
+  }
+  .header-menu {
+    grid-template-columns: 1fr 19fr;
+  }
+}
+@media (max-width: 959px) {
+  .header {
+    grid-template-columns: 1fr 4fr;
+  }
+}
+@media (max-width: 680px) {
+  .header {
+    grid-template-columns: 1fr 1fr;
+  }
+  .header-menu {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+@media (max-width: 627px) {
+  .header h1 {
+    font-size: 20px;
+  }
 }
 </style>

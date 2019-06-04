@@ -38,10 +38,16 @@ button.generate-auth {
   text-align: center;
   padding: 0.5em;
   cursor: pointer;
+  border: 1px solid #000;
 }
 button.generate-auth:disabled {
   background: #888;
   border: 1px solid #888;
   color: #ccc;
+}
+@media (max-width: 680px) {
+  button.generate-auth {
+    margin: 0 1em 1em;
+  }
 }
 </style>

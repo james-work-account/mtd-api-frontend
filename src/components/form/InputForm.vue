@@ -68,4 +68,19 @@ button[type="submit"]:disabled {
   border: 1px solid #888;
   color: #ccc;
 }
+@media (max-width: 1190px) {
+  .params {
+    text-align: left;
+    border-right: none;
+  }
+  .input-data > div {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 680px) {
+  .params,
+  .headers {
+    padding-left: 0.5em;
+  }
+}
 </style>
