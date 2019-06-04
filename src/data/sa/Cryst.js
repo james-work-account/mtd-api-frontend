@@ -1,3 +1,5 @@
+const stripIndent = require('common-tags/lib/stripIndent')
+
 module.exports = {
   "Intent to crystallise": {
     "header-url": "/{nino}/{dateRange}/intent-to-crystallise",
@@ -8,7 +10,8 @@ module.exports = {
     ],
     "scenarios": [
       "NO_SUBMISSIONS_EXIST", "FINAL_DECLARATION_RECEIVED"
-    ]
+    ],
+    "body": stripIndent(`{}`)
   },
   "Crystallisation": {
     "header-url": "/{nino}/{dateRange}/crystallisation",
@@ -19,7 +22,11 @@ module.exports = {
     ],
     "scenarios": [
       "NOT_FOUND", "INCOME_SOURCES_CHANGED", "RECENT_SUBMISSIONS_EXIST", "RESIDENCY_CHANGED", "FINAL_DECLARATION_RECEIVED"
-    ]
+    ],
+    "body": stripIndent(`
+    {
+      "calculationId": "041f7e4d-87b9-4d4a-a296-3cfbdf92f7e2"
+    }`)
   },
   "Retrieve a Crystallisation Obligations [test only]": {
     "header-url": "/{nino}/crystallisation/obligations?from={from}&to={to}",

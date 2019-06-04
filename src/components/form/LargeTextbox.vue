@@ -20,9 +20,10 @@ export default {
   name: "textbox",
   props: ["param"],
   computed: {
-    ...mapGetters([]),
+    ...mapGetters(["data"]),
     defaultValue() {
-      return store.state[this.param];
+      const data = this.data(this.$route.params.page);
+      return data.body;
     }
   }
 };
@@ -38,8 +39,12 @@ div.input * {
 div.input textarea {
   padding: 0.5em;
   margin-left: 1em;
-  width: 20em;
+  width: 25em;
+  height: auto;
   font-size: 14px;
   border-color: #cccccc;
+  font-family: monospace;
+  overflow-x: auto;
+  word-wrap: break-word;
 }
 </style>

@@ -14,11 +14,16 @@ export default new Vuex.Store({
       "Accept": "application/vnd.hmrc.2.0+json"
     },
     "vat": {
-      "Accept": "application/vnd.hmrc.1.0+json"
+      "Accept": "application/vnd.hmrc.1.0+json",
     },
     "Content-Type": "application/json",
     "calculationId": "041f7e4d-87d9-4d4a-a296-3cfbdf92f7e2",
     "selfEmploymentId": "XAIS12345678901",
+    "dateRange": "2018-19",
+    "from": "2018-04-06",
+    "to": "2018-10-03",
+    "accountId": "XPIT00357725120",
+    "periodKey": "A332",
     data: data,
     "apiGrouping": "self-assessment"
   },
