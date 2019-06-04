@@ -51,4 +51,14 @@ export default {
   background: #888;
   color: #fff;
 }
+@media (max-width: 1073px) {
+  .api-grouping-toggle {
+    padding: 0;
+  }
+}
+@media (max-width: 626px) {
+  .api-grouping-toggle {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="input">
+  <div class="input-body">
     <label :for="param">{{param}}</label>
     <textarea
       type="text"
@@ -29,14 +29,14 @@ export default {
 };
 </script>
 
-<style scoped>
-div.input {
+<style>
+div.input-body {
   margin-top: 1em;
 }
-div.input * {
+div.input-body * {
   vertical-align: middle;
 }
-div.input textarea {
+div.input-body textarea {
   padding: 0.5em;
   margin-left: 1em;
   width: 25em;
@@ -46,5 +46,23 @@ div.input textarea {
   font-family: monospace;
   overflow-x: auto;
   word-wrap: break-word;
+  resize: vertical;
+}
+@media (max-width: 1572px) {
+  div.input-body {
+    display: grid;
+  }
+  div.input-body textarea {
+    margin-left: auto;
+  }
+}
+@media (max-width: 1190px) {
+  div.input-body label {
+    margin-bottom: 0.5em;
+  }
+  div.input-body textarea {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 </style>
