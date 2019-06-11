@@ -2,6 +2,7 @@
 
 ## Run with Docker
 ```
+docker rmi jamesworkaccount/express-app (if pulled down already)
 docker run -p 8080:8080 jamesworkaccount/express-app
 ```
 
