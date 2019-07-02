@@ -37,7 +37,7 @@ export default {
       const res = await Api().post(
         `/send?method=${this.queryData.method}&request=${
           this.$route.params.page
-        }&apiGrouping=${this.grouping}`,
+        }&apiGrouping=${this.domain}`,
         jsonObject
       );
       this.output = res.data;
@@ -45,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["data", "grouping"]),
+    ...mapGetters(["data", "domain"]),
     queryData() {
       return this.data(this.$route.params.page);
     }

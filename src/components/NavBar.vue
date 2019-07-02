@@ -6,11 +6,19 @@
       <div></div>
     </div>
     <ul>
-      <li v-for="name in dataKeys" :key="name" @click="closeNav">
-        <router-link class="nav-item" :to="{ name: 'page', params: { page: name }}">
-          <div class="name">{{ name }}</div>
-          <div class="type" :class="[data(name).grouping]">{{data(name).grouping}}</div>
-        </router-link>
+      <li v-for="(value, index) in apiGroupings" :key="index">
+        <button @click="show(value)" class="button-grouping">
+          {{value[0]}}
+          <i class="fas fa-caret-down" :class="{clicked : isClicked[value]}"></i>
+        </button>
+        <ul>
+          <li v-for="name in value" :key="name" @click="closeNav">
+            <router-link class="nav-item" :to="{ name: 'page', params: { page: name }}">
+              <div class="name">{{ name }}</div>
+              <div class="type" :class="[data(name).grouping]">{{data(name).grouping}}</div>
+            </router-link>
+          </li>
+        </ul>
       </li>
     </ul>
   </nav>
@@ -18,9 +26,15 @@
 
 <script>
 import { mapGetters } from "vuex";
+import _ from "lodash";
 
 export default {
   name: "navbar",
+  data() {
+    return {
+      isClicked: {}
+    };
+  },
   methods: {
     toggleNav() {
       document.querySelector("nav ul").classList.toggle("show");
@@ -32,7 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["dataKeys", "data"])
+    ...mapGetters(["dataKeys", "data", "apiGroupings"])
   }
 };
 </script>
@@ -41,11 +55,22 @@ export default {
 * {
   --transition: ease-in-out 0.2s;
 }
+.button-grouping {
+  width: calc(100% + 1.5em);
+  transform: translateX(-1.5em);
+  padding: 1em;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
 .burger {
   display: none;
 }
-nav ul {
-  padding-top: 1em;
+/* Specific to Grouping */
+nav > ul {
   padding-left: 1em;
   padding-bottom: 2em;
   list-style: none;

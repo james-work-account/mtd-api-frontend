@@ -1,7 +1,7 @@
 <template>
   <ul class="api-grouping-toggle">
-    <li :class="{active: grouping === sa}" @click="toggleGrouping(sa)">Self Assessment</li>
-    <li :class="{active: grouping === vat}" @click="toggleGrouping(vat)">Vat</li>
+    <li :class="{active: domain === sa}" @click="toggleDomain(sa)">Self Assessment</li>
+    <li :class="{active: domain === vat}" @click="toggleDomain(vat)">Vat</li>
   </ul>
 </template>
 
@@ -17,13 +17,13 @@ export default {
     };
   },
   methods: {
-    toggleGrouping(apiGrouping) {
-      store.dispatch("updateApiGrouping", apiGrouping);
+    toggleDomain(apiDomain) {
+      store.dispatch("updateApiDomain", apiDomain);
       this.$router.push({ name: "home" });
     }
   },
   computed: {
-    ...mapGetters(["grouping"])
+    ...mapGetters(["domain"])
   }
 };
 </script>

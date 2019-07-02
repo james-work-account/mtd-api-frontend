@@ -18,13 +18,13 @@ export default {
   methods: {
     async generateOAuth() {
       this.disabled = true;
-      const res = await Api().get(`/generate?apiGrouping=${this.grouping}`);
+      const res = await Api().get(`/generate?apiGrouping=${this.domain}`);
       store.dispatch("updateAuth", res.data);
       this.disabled = false;
     }
   },
   computed: {
-    ...mapGetters(["grouping"])
+    ...mapGetters(["domain"])
   }
 };
 </script>

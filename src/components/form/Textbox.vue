@@ -62,10 +62,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["grouping", "data"]),
+    ...mapGetters(["domain", "data"]),
     value() {
-      if (store.state[this.grouping][this.param]) {
-        return store.state[this.grouping][this.param];
+      if (store.state[this.domain][this.param]) {
+        return store.state[this.domain][this.param];
       } else {
         return store.state[this.param];
       }

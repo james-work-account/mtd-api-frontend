@@ -25,7 +25,8 @@ export default new Vuex.Store({
     "accountId": "XPIT00357725120",
     "periodKey": "A332",
     data: data,
-    "apiGrouping": "self-assessment"
+    "apiDomain": "self-assessment",
+    "groupedApis": {}
   },
   mutations: {
     UPDATE_VRN(state, {
@@ -48,8 +49,11 @@ export default new Vuex.Store({
     }) {
       state["Authorization"] = accessToken
     },
-    UPDATE_API_GROUPING(state, apiGrouping) {
-      state["apiGrouping"] = apiGrouping
+    UPDATE_API_DOMAIN(state, apiDomain) {
+      state["apiDomain"] = apiDomain
+    },
+    SET_INITIAL_API_GROUPINGS(state, groupings) {
+      state["groupedApis"] = groupings
     }
   },
   actions: {
@@ -59,8 +63,24 @@ export default new Vuex.Store({
       context.commit("UPDATE_MTDITID", data)
       context.commit("UPDATE_ACCESS_TOKEN", data)
     },
-    updateApiGrouping(context, apiGrouping) {
-      context.commit("UPDATE_API_GROUPING", apiGrouping)
+    updateApiDomain(context, apiDomain) {
+      context.commit("UPDATE_API_DOMAIN", apiDomain)
+    },
+    setInitialApiGroupings(context) {
+      //TODO: Refactor
+      let groupingsObject = {};
+      for (let domain in this.getters.domains) {
+        const apis = this.getters.dataKeys().map(key => [key, this.getters.data(key)]);
+        const groupedApis = _.groupBy(apis, api => api[1].grouping);
+        const groupings = Object.keys(groupedApis).map(group => [
+          group,
+          groupedApis[group].map(api => api[0])
+        ]);
+        groupingsObject[this.getters.domains[domain]] = Object.assign(...groupings.map(([key, value]) => ({
+          [key]: value
+        })))
+      }
+      context.commit("SET_INITIAL_API_GROUPINGS", groupingsObject)
     }
   },
   getters: {
@@ -75,16 +95,24 @@ export default new Vuex.Store({
     },
     data: (state) => {
       return (name) => {
-        const grouping = state.apiGrouping
-        return state.data[grouping][name]
+        const domain = state.apiDomain
+        return state.data[domain][name]
       }
     },
     dataKeys: (state) => {
-      const grouping = state.apiGrouping
-      return Object.keys(state.data[grouping])
+      return (domain = state.apiDomain) => {
+        return Object.keys(state.data[domain])
+      }
     },
-    grouping: (state) => {
-      return state.apiGrouping
+    domain: (state) => {
+      return state.apiDomain
+    },
+    domains: (state) => {
+      return Object.keys(state.data)
+    },
+    apiGroupings: (state) => {
+      console.log(state.apiDomain, state.groupedApis[state.apiDomain])
+      return state.groupedApis[state.apiDomain]
     }
   }
 })

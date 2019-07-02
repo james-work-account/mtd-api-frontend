@@ -16,6 +16,9 @@ export default {
   components: {
     Header,
     NavBar
+  },
+  mounted() {
+    this.$store.dispatch("setInitialApiGroupings");
   }
 };
 </script>
