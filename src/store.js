@@ -28,6 +28,7 @@ export default new Vuex.Store({
     "accountId": "XPIT00357725120",
     "periodKey": "A332",
     "lossId": "1234568790ABCDE",
+    "typeOfLoss": "self-employment",
     data: data,
     "apiGrouping": "self-assessment"
   },
