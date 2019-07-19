@@ -2,7 +2,7 @@ const stripIndent = require('common-tags/lib/stripIndent')
 
 module.exports = {
   "Amend Dividends Income": {
-    "header-url": "/{nino}/dividends/{dateRange}",
+    "header-url": "/{nino}/dividends/{taxYear}",
     "method": "PUT",
     "grouping": "DivInc",
     "headers": [
@@ -15,7 +15,7 @@ module.exports = {
     }`)
   },
   "Retrieve Dividends Income": {
-    "header-url": "/{nino}/dividends/{dateRange}",
+    "header-url": "/{nino}/dividends/{taxYear}",
     "method": "GET",
     "grouping": "DivInc",
     "headers": [

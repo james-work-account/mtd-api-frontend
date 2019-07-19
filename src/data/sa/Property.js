@@ -4,7 +4,7 @@ module.exports = {
   "Retrieve EOPS Obligations": {
     "header-url": "/{nino}/uk-properties/end-of-period-statements/obligations?from={from}&to={to}",
     "method": "GET",
-    "grouping": "PropertyEOPS",
+    "grouping": "Property",
     "headers": [
       "Authorization", "Accept", "Gov-Test-Scenario"
     ],
@@ -15,7 +15,7 @@ module.exports = {
   "Submit Property EOPS Declaration": {
     "header-url": "/{nino}/uk-properties/end-of-period-statements/from/{from}/to/{to}",
     "method": "POST",
-    "grouping": "PropertyEOPS",
+    "grouping": "Property",
     "headers": [
       "Authorization", "Content-Type", "Accept", "Gov-Test-Scenario"
     ],

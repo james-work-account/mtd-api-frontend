@@ -4,8 +4,8 @@
       <h1>{{this.$route.params.page}}</h1>
       <h2>{{queryData["header-url"]}}</h2>
     </section>
-    <InputForm :submitRequest="submitRequest" :disabled="buttonIsDisabled"/>
-    <OutputField :body="output"/>
+    <InputForm :submitRequest="submitRequest" :disabled="buttonIsDisabled" />
+    <OutputField :body="output" />
   </section>
 </template>
 
@@ -32,12 +32,12 @@ export default {
       const formdata = new FormData(form);
       let jsonObject = {};
       for (const [key, value] of formdata.entries()) {
-        jsonObject[key] = value;
+        if (value.length > 0) {
+          jsonObject[key] = value;
+        }
       }
       const res = await Api().post(
-        `/send?method=${this.queryData.method}&request=${
-          this.$route.params.page
-        }&apiGrouping=${this.grouping}`,
+        `/send?method=${this.queryData.method}&request=${this.$route.params.page}&apiGrouping=${this.grouping}`,
         jsonObject
       );
       this.output = res.data;

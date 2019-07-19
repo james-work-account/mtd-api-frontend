@@ -2,7 +2,7 @@ const stripIndent = require('common-tags/lib/stripIndent')
 
 module.exports = {
   "Intent to crystallise": {
-    "header-url": "/{nino}/{dateRange}/intent-to-crystallise",
+    "header-url": "/{nino}/{taxYear}/intent-to-crystallise",
     "method": "POST",
     "grouping": "Cryst",
     "headers": [
@@ -14,7 +14,7 @@ module.exports = {
     "body": stripIndent(`{}`)
   },
   "Crystallisation": {
-    "header-url": "/{nino}/{dateRange}/crystallisation",
+    "header-url": "/{nino}/{taxYear}/crystallisation",
     "method": "POST",
     "grouping": "Cryst",
     "headers": [

@@ -4,7 +4,7 @@ module.exports = {
   "Submit Self Employment EOPS Declaration": {
     "header-url": "/{nino}/self-employments/{selfEmploymentId}/end-of-period-statements/from/{from}/to/{to}",
     "method": "POST",
-    "grouping": "SEEOPS",
+    "grouping": "SelfEmp",
     "headers": [
       "Authorization", "Content-Type", "Accept", "Gov-Test-Scenario"
     ],

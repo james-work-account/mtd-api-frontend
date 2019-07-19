@@ -33,7 +33,7 @@ module.exports = {
     }`)
   },
   "Retrieve Charitable Giving": {
-    "header-url": "/{nino}/charitable-giving/{dateRange}",
+    "header-url": "/{nino}/charitable-giving/{taxYear}",
     "method": "GET",
     "grouping": "CharGiv",
     "headers": [

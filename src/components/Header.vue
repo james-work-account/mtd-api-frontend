@@ -3,7 +3,7 @@
     <h1>
       <router-link :to="{ name: 'home'}">URL Helper</router-link>
     </h1>
-    <HeaderMenu class="header-menu"/>
+    <HeaderMenu class="header-menu" />
   </header>
 </template>
 

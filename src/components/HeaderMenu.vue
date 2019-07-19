@@ -6,8 +6,8 @@
       <div></div>
     </div>
     <div class="header-menu-contents">
-      <ApiGroupingToggle/>
-      <GenerateOAuth/>
+      <ApiGroupingToggle />
+      <GenerateOAuth />
     </div>
   </div>
 </template>
@@ -50,8 +50,6 @@ export default {
   .header-menu-contents {
     grid-column-gap: 0.5em;
   }
-}
-@media (max-width: 680px) {
   .header-menu-contents {
     grid-template-columns: 1fr;
     display: none;
@@ -86,6 +84,9 @@ export default {
   }
   .header-show {
     display: grid;
+  }
+  .header-show ul {
+    max-height: unset;
   }
 }
 </style>

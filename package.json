@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "app": "npm install --only=dev --no-shrinkwrap && npm run build && node server.js",
+    "app": "npm install --only=dev --no-shrinkwrap && npm run build && node backend/server.js",
     "serve": "vue-cli-service serve",
+    "backend": "nodemon backend/server.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },

@@ -13,7 +13,7 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 
-const staticFileMiddleware = express.static(__dirname + '/dist')
+const staticFileMiddleware = express.static(__dirname.substring(0, __dirname.length - 8) + '/dist') // remove "/backend" from __dirname
 app.use(staticFileMiddleware)
 
 app.get('/generate', async (req, res) => {

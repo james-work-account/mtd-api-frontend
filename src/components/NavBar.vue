@@ -92,18 +92,20 @@ nav ul a.router-link-exact-active {
 }
 
 nav ul a.router-link-exact-active .TaxCalc,
-nav ul a.router-link-exact-active .Obli {
+nav ul a.router-link-exact-active .Obli,
+nav ul a.router-link-exact-active .BFLoss {
   background-color: #f85888;
   border: 1px solid #a13959;
 }
 
-nav ul a.router-link-exact-active .PropertyEOPS,
-nav ul a.router-link-exact-active .Retu {
+nav ul a.router-link-exact-active .Property,
+nav ul a.router-link-exact-active .Retu,
+nav ul a.router-link-exact-active .LossClaims {
   background-color: #c03028;
   border: 1px solid #7d1f1a;
 }
 
-nav ul a.router-link-exact-active .SEEOPS,
+nav ul a.router-link-exact-active .SelfEmp,
 nav ul a.router-link-exact-active .PayLi {
   background-color: #f08030;
   border: 1px solid #9c531f;
