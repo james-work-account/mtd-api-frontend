@@ -3,7 +3,6 @@
     <li class="dropdown-menu" @click="open = !open">{{dictionary[grouping]}} (click to switch)</li>
     <li
       v-show="open"
-      class
       :class="{active: grouping === sa}"
       @click="toggleGrouping(sa)"
     >{{dictionary[sa]}}</li>
