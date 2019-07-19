@@ -1,6 +1,6 @@
 const selfAssessment = {
   TaxCalc: require('./sa/TaxCalc'),
-  EOPS: require('./sa/SelfEmployment'),
+  SelfEmployment: require('./sa/SelfEmployment'),
   Property: require('./sa/Property'),
   CharGiv: require('./sa/CharGiv'),
   DivInc: require('./sa/DivInc'),
@@ -14,11 +14,16 @@ const vat = {
   PaymentsAndLiabilities: require('./vat/PaymentsAndLiabilities')
 }
 
+const losses = {
+  BroughtForwardLosses: require('./losses/BroughtForwardLosses'),
+  LossClaims: require('./losses/LossClaims')
+}
+
 module.exports = {
 
   "self-assessment": {
     ...selfAssessment.TaxCalc,
-    ...selfAssessment.EOPS,
+    ...selfAssessment.SelfEmployment,
     ...selfAssessment.Property,
     ...selfAssessment.CharGiv,
     ...selfAssessment.DivInc,
@@ -29,5 +34,9 @@ module.exports = {
     ...vat.Obligations,
     ...vat.Returns,
     ...vat.PaymentsAndLiabilities
+  },
+  "losses": {
+    ...losses.BroughtForwardLosses,
+    ...losses.LossClaims
   }
 }

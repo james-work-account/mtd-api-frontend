@@ -39,7 +39,7 @@ module.exports = {
     ]
   },
   "Amend annual summary": {
-    "header-url": "/{nino}/savings-accounts/{accountId}/{dateRange}",
+    "header-url": "/{nino}/savings-accounts/{accountId}/{taxYear}",
     "method": "PUT",
     "grouping": "SavAcc",
     "headers": [
@@ -55,7 +55,7 @@ module.exports = {
     }`)
   },
   "Retrieve annual summary": {
-    "header-url": "/{nino}/savings-accounts/{accountId}/{dateRange}",
+    "header-url": "/{nino}/savings-accounts/{accountId}/{taxYear}",
     "method": "GET",
     "grouping": "SavAcc",
     "headers": [

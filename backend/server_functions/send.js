@@ -1,4 +1,4 @@
-const data = require('../src/data/data')
+const data = require('../../src/data/data')
 const axios = require('axios')
 
 const baseURL = (apiGrouping) => {
@@ -7,6 +7,8 @@ const baseURL = (apiGrouping) => {
       return "https://test-api.service.hmrc.gov.uk/self-assessment/ni"
     case "vat":
       return "https://test-api.service.hmrc.gov.uk/organisations/vat"
+    case "losses":
+      return "https://test-api.service.hmrc.gov.uk/individual/losses"
     default:
       return "um no"
   }
@@ -26,6 +28,7 @@ const getUrl = (body, {
       url = url.replace(`${key}={${key}}`, body[key])
     }
   }
+  url = url.replace(/\w+={\w+}/g, "") // remove any extra where value is unchanged after previous replaces
   return url
 }
 
@@ -55,6 +58,16 @@ const getResponse = async (url, body, headers, {
         })
     } else if (method === "GET") {
       return await axios.get(url, {
+          headers
+        })
+        .then(resp => {
+          return getSuccess(resp)
+        })
+        .catch(error => {
+          return getError(error)
+        })
+    } else if (method === "DELETE") {
+      return await axios.delete(url, {
           headers
         })
         .then(resp => {
@@ -100,7 +113,7 @@ const getFallbackError = (error) => {
       status: 500,
       data: {
         code: "INTERNAL_SERVER_ERROR",
-        message: "Probably offline lol"
+        message: "Probably offline lol (or you've been fiddling with code you don't understand)"
       }
     }
   } else {
