@@ -63,12 +63,7 @@ export default {
     grid-template-columns: 1fr 19fr;
   }
 }
-@media (max-width: 959px) {
-  .header {
-    grid-template-columns: 1fr 4fr;
-  }
-}
-@media (max-width: 680px) {
+@media (max-width: 810px) {
   .header {
     grid-template-columns: 1fr 1fr;
   }

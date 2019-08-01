@@ -20,14 +20,16 @@ yarn install
 #### Frontend
 
 ```
+yarn run frontend (frontend runs on port 8081)
+OR
 yarn run serve -- --port <PORT> (PORT can't be the default Vue port of 8080 since the backend runs on that port)
 ```
 
 #### Backend
 ```
-node server.js
+yarn run backend
 OR
-nodemon server.js (for hot reloading)
+node server.js (if you don't have nodemon installed)
 ```
 
 ---

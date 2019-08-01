@@ -2,7 +2,7 @@ const stripIndent = require('common-tags/lib/stripIndent')
 
 module.exports = {
   "Amend Charitable Giving": {
-    "header-url": "/{nino}/charitable-giving/{dateRange}",
+    "header-url": "/{nino}/charitable-giving/{taxYear}",
     "method": "PUT",
     "grouping": "CharGiv",
     "headers": [

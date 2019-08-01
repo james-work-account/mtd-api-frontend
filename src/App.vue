@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <Header/>
+    <Header />
     <main>
-      <NavBar/>
-      <router-view class="content"/>
+      <NavBar />
+      <router-view class="content" />
     </main>
   </div>
 </template>
@@ -11,11 +11,18 @@
 <script>
 import Header from "@/components/Header";
 import NavBar from "@/components/NavBar";
+import Api from "@/services/Api";
 
 export default {
   components: {
     Header,
     NavBar
+  },
+  async created() {
+    const apis = await Api().get("/apis");
+    console.log(apis.data);
+    const api = await Api().get("/apis/self-assessment-api");
+    console.log(api.data);
   }
 };
 </script>

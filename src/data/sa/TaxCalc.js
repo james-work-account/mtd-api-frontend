@@ -37,5 +37,16 @@ module.exports = {
     "scenarios": [
       "ERRORS_AND_WARNINGS", "WARNINGS_ONLY", "ERRORS_ONLY", "NO_MESSAGES", "NOT_FOUND"
     ]
+  },
+  "test api": {
+    "header-url": "/{nino}/{goat}",
+    "method": "GET",
+    "grouping": "TaxCalc",
+    "headers": [
+      "Authorization", "Accept", "Gov-Test-Scenario"
+    ],
+    "scenarios": [
+      "SELF_EMPLOYMENT", "ALL_FIELDS_TEST_ONLY", "ERRORS_AND_WARNINGS", "RESPONSE_BEING_PREPARED", "NOT_FOUND"
+    ]
   }
 }

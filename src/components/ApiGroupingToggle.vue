@@ -26,11 +26,11 @@ import store from "@/store";
 export default {
   data() {
     return {
-      sa: "self-assessment",
+      sa: "self-assessment-api",
       vat: "vat",
       losses: "losses",
       dictionary: {
-        "self-assessment": "Self Assessment",
+        "self-assessment-api": "Self Assessment",
         vat: "Vat",
         losses: "Individual Losses"
       },

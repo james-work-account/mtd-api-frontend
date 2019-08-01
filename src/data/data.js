@@ -20,8 +20,7 @@ const losses = {
 }
 
 module.exports = {
-
-  "self-assessment": {
+  "self-assessment-api": {
     ...selfAssessment.TaxCalc,
     ...selfAssessment.SelfEmployment,
     ...selfAssessment.Property,

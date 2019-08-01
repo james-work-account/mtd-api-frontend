@@ -4,6 +4,9 @@ const morgan = require('morgan')
 const axios = require('axios')
 const generate = require('./server_functions/generate')
 const send = require('./server_functions/send')
+const apiInfo = require('./server_functions/apiInfo')
+// hit RAML
+const raml = require("raml-parser")
 
 const app = express()
 app.use(morgan('combined'))
@@ -16,8 +19,28 @@ app.use(express.json());
 const staticFileMiddleware = express.static(__dirname.substring(0, __dirname.length - 8) + '/dist') // remove "/backend" from __dirname
 app.use(staticFileMiddleware)
 
+
+/** GET API INFORMATION */
+app.get('/apis', async (req, res) => {
+  const response = await apiInfo.getAllApis()
+  res.send(response)
+})
+app.get('/apis/:api', async (req, res) => {
+  const {
+    api
+  } = req.params
+  const response = await apiInfo.getEndpointNames(api)
+  res.send(response)
+})
+app.get('/apis/:api/:endpoint', async (req, res) => {
+  const response = await apiInfo.getEndpoint(req.params)
+  res.send(response)
+})
+
+
+/** GENERATE OAUTH DATA */
 app.get('/generate', async (req, res) => {
-  const user = await generate.generateUser()
+  const user = await generate.generateUser(req.query.userType)
   const {
     userId,
     password,
@@ -36,6 +59,8 @@ app.get('/generate', async (req, res) => {
   res.send(response)
 })
 
+
+/** HIT OUR APIS */
 app.post('/send', async (req, res) => {
   const body = req.body;
   const queryParameters = req.query

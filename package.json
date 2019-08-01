@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "app": "npm install --only=dev --no-shrinkwrap && npm run build && node backend/server.js",
+    "frontend": "yarn run serve -- --port 8081",
     "serve": "vue-cli-service serve",
     "backend": "nodemon backend/server.js",
     "build": "vue-cli-service build",
@@ -16,8 +17,11 @@
     "core-js": "^3.1.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jsdom": "^15.1.1",
     "morgan": "^1.9.1",
     "puppeteer": "^1.18.1",
+    "raml-parser": "^0.8.18",
+    "underscore": "^1.9.1",
     "vue": "^2.6.10",
     "vue-router": "^3.0.7",
     "vuex": "^3.1.1"

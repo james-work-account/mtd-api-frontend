@@ -3,7 +3,7 @@ const axios = require('axios')
 
 const baseURL = (apiGrouping) => {
   switch (apiGrouping) {
-    case "self-assessment":
+    case "self-assessment-api":
       return "https://test-api.service.hmrc.gov.uk/self-assessment/ni"
     case "vat":
       return "https://test-api.service.hmrc.gov.uk/organisations/vat"

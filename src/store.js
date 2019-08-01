@@ -10,7 +10,7 @@ export default new Vuex.Store({
     nino: null,
     mtdItId: null,
     "Authorization": null,
-    "self-assessment": {
+    "self-assessment-api": {
       "Accept": "application/vnd.hmrc.2.0+json"
     },
     "vat": {
@@ -30,7 +30,7 @@ export default new Vuex.Store({
     "lossId": "1234568790ABCDE",
     "typeOfLoss": "self-employment",
     data: data,
-    "apiGrouping": "self-assessment"
+    "apiGrouping": "self-assessment-api"
   },
   mutations: {
     UPDATE_VRN(state, {
