@@ -5,7 +5,7 @@
       <div></div>
       <div></div>
     </div>
-    <ul>
+    <ul v-if="grouping && dataKeys">
       <li v-for="name in dataKeys" :key="name" @click="closeNav">
         <router-link class="nav-item" :to="{ name: 'page', params: { page: name }}">
           <div class="name">{{ name }}</div>
@@ -32,7 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["dataKeys", "data"])
+    ...mapGetters(["grouping", "dataKeys", "data"])
   }
 };
 </script>

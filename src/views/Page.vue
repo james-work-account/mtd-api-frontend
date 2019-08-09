@@ -2,7 +2,7 @@
   <section class="body">
     <section class="heading">
       <h1>{{this.$route.params.page}}</h1>
-      <h2>{{queryData["header-url"]}}</h2>
+      <h2>{{url}}</h2>
     </section>
     <InputForm :submitRequest="submitRequest" :disabled="buttonIsDisabled" />
     <OutputField :body="output" />
@@ -47,7 +47,14 @@ export default {
   computed: {
     ...mapGetters(["data", "grouping"]),
     queryData() {
+      console.log(this.data(this.$route.params.page));
       return this.data(this.$route.params.page);
+    },
+    url() {
+      const queryParams = this.queryData["query_params"].join("&");
+      return queryParams.length > 0
+        ? `${this.queryData["path"]}?${queryParams}`
+        : `${this.queryData["path"]}`;
     }
   }
 };

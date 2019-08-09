@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import data from '@/data/data'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    apis: [],
     vrn: null,
     nino: null,
     mtdItId: null,
@@ -29,10 +29,29 @@ export default new Vuex.Store({
     "periodKey": "A332",
     "lossId": "1234568790ABCDE",
     "typeOfLoss": "self-employment",
-    data: data,
-    "apiGrouping": "self-assessment-api"
+    data: {},
+    "apiGrouping": null
   },
   mutations: {
+    UPDATE_API_LIST(state, apis) {
+      state.apis = apis
+    },
+    UPDATE_ENDPOINT_NAMES_FOR(state, {
+      grouping,
+      endpoints
+    }) {
+      state.data[grouping] = endpoints
+    },
+    UPDATE_ENDPOINT_DETAILS_FOR(state, {
+      grouping,
+      endpoint,
+      data
+    }) {
+      state.data[grouping][endpoint] = {
+        ...state.data[grouping][endpoint],
+        ...data
+      }
+    },
     UPDATE_VRN(state, {
       vrn
     }) {
@@ -58,6 +77,27 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    updateEndpoints(context, data) {
+      context.commit("endpoints", )
+    },
+    updateApiList(context, data) {
+      const apis = Object.assign({}, ...(data.map(item => ({
+        [item.name]: item.friendly_name
+      }))))
+      context.commit("UPDATE_API_LIST", apis)
+    },
+    updateEndpointNameFor(context, data) {
+      const endpoints = Object.assign({}, ...(data.endpoints.map(item => ({
+        [item.friendly_name]: item
+      }))))
+      context.commit("UPDATE_ENDPOINT_NAMES_FOR", {
+        "grouping": data.name,
+        endpoints
+      })
+    },
+    updateEndpointDetailsFor(context, data) {
+      context.commit("UPDATE_ENDPOINT_DETAILS_FOR", data)
+    },
     updateAuth(context, data) {
       context.commit("UPDATE_VRN", data)
       context.commit("UPDATE_NINO", data)
@@ -69,6 +109,9 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    apiList: state => {
+      return state.apis
+    },
     nino: state => {
       return state.nino
     },
@@ -80,13 +123,21 @@ export default new Vuex.Store({
     },
     data: (state) => {
       return (name) => {
-        const grouping = state.apiGrouping
-        return state.data[grouping][name]
+        if (state.apiGrouping) {
+          const grouping = state.apiGrouping.name
+          return state.data[grouping][name]
+        } else {
+          return null
+        }
       }
     },
     dataKeys: (state) => {
-      const grouping = state.apiGrouping
-      return Object.keys(state.data[grouping])
+      if (state.apiGrouping) {
+        const grouping = state.apiGrouping.name
+        return Object.keys(state.data[grouping])
+      } else {
+        return []
+      }
     },
     grouping: (state) => {
       return state.apiGrouping

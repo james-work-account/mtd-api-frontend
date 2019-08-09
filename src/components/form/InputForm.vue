@@ -1,8 +1,8 @@
 <template>
   <form id="form-input" class="input-data" @submit.prevent="submitRequest">
     <div>
-      <FormSectionParams class="params" :params="params" :queryData="queryData"/>
-      <FormSectionHeaders class="headers" :queryData="queryData"/>
+      <FormSectionParams class="params" :params="params" :queryData="queryData" />
+      <FormSectionHeaders class="headers" :queryData="queryData" />
     </div>
     <button type="submit" :disabled="disabled">Send Request</button>
   </form>
@@ -23,7 +23,10 @@ export default {
       return this.data(this.$route.params.page);
     },
     params() {
-      return this.queryData["header-url"].match(/(?!{)\w+(?=})/g);
+      return [
+        ...this.queryData["path_params"],
+        ...this.queryData["query_params"]
+      ];
     }
   }
 };

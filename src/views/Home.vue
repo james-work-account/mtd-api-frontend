@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Select an endpoint to get started</h1>
+    <h1>Select an API to get started</h1>
   </div>
 </template>
 

@@ -2,7 +2,7 @@
   <div id="app">
     <Header />
     <main>
-      <NavBar />
+      <NavBar v-if="data" />
       <router-view class="content" />
     </main>
   </div>
@@ -12,17 +12,22 @@
 import Header from "@/components/Header";
 import NavBar from "@/components/NavBar";
 import Api from "@/services/Api";
+import store from "@/store";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     Header,
     NavBar
   },
+  computed: {
+    ...mapGetters(["data"])
+  },
   async created() {
     const apis = await Api().get("/apis");
-    console.log(apis.data);
-    const api = await Api().get("/apis/self-assessment-api");
-    console.log(api.data);
+    if (apis) {
+      store.dispatch("updateApiList", apis.data); // only happens if apis is not null
+    }
   }
 };
 </script>

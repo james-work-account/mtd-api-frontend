@@ -23,17 +23,32 @@ app.use(staticFileMiddleware)
 /** GET API INFORMATION */
 app.get('/apis', async (req, res) => {
   const response = await apiInfo.getAllApis()
+  console.log(response.map(el => el.name).join(","))
   res.send(response)
 })
-app.get('/apis/:api', async (req, res) => {
-  const {
-    api
-  } = req.params
-  const response = await apiInfo.getEndpointNames(api)
+
+
+
+app.get('/apis/api-info', async (req, res) => {
+  const apis = req.header("apis").split(",")
+  const response = await apiInfo.getEndpointNames(apis)
   res.send(response)
 })
-app.get('/apis/:api/:endpoint', async (req, res) => {
-  const response = await apiInfo.getEndpoint(req.params)
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.get('/apis/api-info/:api', async (req, res) => {
+  const response = await apiInfo.getEndpointsFor(req.params)
   res.send(response)
 })
 
