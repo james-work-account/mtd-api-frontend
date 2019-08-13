@@ -64,7 +64,14 @@ export default {
   computed: {
     ...mapGetters(["grouping", "data"]),
     value() {
-      return store.state[this.param];
+      if (
+        store.state[this.grouping.name] &&
+        store.state[this.grouping.name][this.param]
+      ) {
+        return store.state[this.grouping.name][this.param];
+      } else {
+        return store.state[this.param];
+      }
     },
     govTestArray() {
       const queryData = this.data(this.$route.params.page);
