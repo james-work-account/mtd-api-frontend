@@ -67,7 +67,7 @@ NOTE: Will only generate currently for APIs using the read/write vat & self-asse
 
 #### Response
 
-See https://developer.service.hmrc.gov.uk/api-documentation/docs/api for the correct expected body for your request.
+See [The Developer Hub](https://developer.service.hmrc.gov.uk/api-documentation/docs/api) for the correct expected body for your request.
 
 ### /apis
 
