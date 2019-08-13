@@ -54,10 +54,10 @@ NOTE: Will only generate currently for APIs using the read/write vat & self-asse
 #### Request
 
 ```
-/send?method={METHOD}&url={URL} (URL includes any query parameters)
+/send?method={METHOD}
 
 {
-  url
+  url (full, with all query parameters)
   headers {
     k: v (for each header)
   }
@@ -82,30 +82,30 @@ See [The Developer Hub](https://developer.service.hmrc.gov.uk/api-documentation/
 
 ### /apis/api-info
 
-Remember: put API names in comma-separated list under the Header `apis` (no spaces)
-Less quick than `/apis`. Need to work out what should actually go here.
+Remember: put API names in comma-separated list under the Header `apis` (no spaces).
+
+e.g. Headers: `apis -> api-example-microservice,agent-authorisation-api,business-rates-api,secure-data-exchange-bulk-download,customs-inventory-linking-exports,api-notification-pull,api-platform-test-user,estate-registration-api,agent-authorisation-api,individual-losses-api,self-assessment-api,api-platform-test-user,lisa-api,api-platform-test-user,national-insurance,api-platform-test-user,national-insurance-des-stub,individuals-paye,marriage-allowance,api-platform-test-user,paye-des-stub,marriage-allowance-des-stub,ras-api,individual-benefits,individual-employment,individual-income,individuals-paye,individual-tax,marriage-allowance,national-insurance,api-platform-test-user,paye-des-stub,marriage-allowance-des-stub,national-insurance-des-stub,trust-registration-api,vat-api,api-platform-test-user`
+
+Less quick than `/apis`. Currently unused as when called from the frontend it was taking too long and if one API call fails, the entire thing fails.
 
 ```
-[
-  arr [
-    {
-      :name {
-        baseUrl
-        arr [
-          {
-            name
-            endpoint_name
-            path
-            path_params[string]
-            query_params[string]
-            request_headers[string]
-            gov_test_scenarios[string]
-          }
-        ]
+{
+  :api {
+    baseUrl
+    friendly_name
+    :name {
+      {
+        name
+        endpoint_name
+        path
+        path_params[string]
+        query_params[string]
+        request_headers[string]
+        gov_test_scenarios[string]
       }
     }
-  ]
-]
+  }
+}
 ```
 
 ### /apis/api-info/:api
@@ -113,9 +113,9 @@ Less quick than `/apis`. Need to work out what should actually go here.
 ```
 {
   baseUrl
-  arr [
-    {
-      name
+  friendly_name
+  endpoints {
+    :name {
       endpoint_name
       http_verb
       path
@@ -124,7 +124,7 @@ Less quick than `/apis`. Need to work out what should actually go here.
       request_headers[string]
       gov_test_scenarios[string]
     }
-  ]
+  }
 }
 ```
 
