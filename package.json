@@ -20,8 +20,6 @@
     "jsdom": "^15.1.1",
     "morgan": "^1.9.1",
     "puppeteer": "^1.18.1",
-    "raml-parser": "^0.8.18",
-    "underscore": "^1.9.1",
     "vue": "^2.6.10",
     "vue-router": "^3.0.7",
     "vuex": "^3.1.1"

@@ -21,11 +21,8 @@ app.use(staticFileMiddleware)
 /** GET API INFORMATION */
 app.get('/apis', async (req, res) => {
   const response = await apiInfo.getAllApis()
-  console.log(response.map(el => el.name).join(","))
   res.send(response)
 })
-
-
 
 app.get('/apis/api-info', async (req, res) => {
   const apis = req.header("apis").split(",")
