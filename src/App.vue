@@ -2,7 +2,7 @@
   <div id="app">
     <Header />
     <main>
-      <div v-if="loading"></div>
+      <Loading v-if="loading" />
       <template v-else>
         <NavBar v-if="data" />
         <router-view class="content" />
@@ -14,6 +14,7 @@
 <script>
 import Header from "@/components/Header";
 import NavBar from "@/components/NavBar";
+import Loading from "@/components/Loading";
 import Api from "@/services/Api";
 import store from "@/store";
 import { mapGetters } from "vuex";
@@ -21,7 +22,8 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     Header,
-    NavBar
+    NavBar,
+    Loading
   },
   data() {
     return {

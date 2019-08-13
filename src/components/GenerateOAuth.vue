@@ -1,12 +1,5 @@
 <template>
-  <div class="generate-auth-wrapper">
-    <button
-      class="generate-auth"
-      @click="generateOAuth"
-      :disabled="disabled"
-    >Generate new OAuth Data</button>
-    <SelectorArrow />
-  </div>
+  <button class="generate-auth" @click="generateOAuth" :disabled="disabled">Generate new OAuth Data</button>
 </template>
 
 <script>
@@ -15,13 +8,9 @@ import Api from "@/services/Api";
 import store from "@/store";
 import { mapGetters } from "vuex";
 import { setTimeout } from "timers";
-import SelectorArrow from "@/components/SelectorArrow";
 
 export default {
   name: "generateOAuth",
-  components: {
-    SelectorArrow
-  },
   data() {
     return {
       disabled: false,
@@ -48,16 +37,8 @@ export default {
 </script>
 
 <style>
-div.generate-auth-wrapper {
-  background: #fff;
-  border: 1px solid #000;
-  font-size: 20px;
-  display: grid;
-  grid-template-columns: 9fr 1fr;
-}
 button.generate-auth {
   border: none;
-  border-right: 1px solid #000;
   color: #000;
   background: #fff;
   font-size: 20px;
