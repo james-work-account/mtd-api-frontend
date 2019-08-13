@@ -4,11 +4,11 @@
 
     <ul v-show="open">
       <li
-        v-for="(friendly_name, name) in apiList"
-        :key="name"
-        :class="{active: grouping === name}"
-        @click="toggleGrouping(name, friendly_name)"
-      >{{friendly_name}}</li>
+        v-for="(obj, index) in dataFriendlyNames"
+        :key="index"
+        :class="{active: grouping === obj.name}"
+        @click="toggleGrouping(obj.name, obj.friendly_name)"
+      >{{obj.friendly_name}}</li>
     </ul>
   </div>
 </template>
@@ -30,11 +30,6 @@ export default {
       this.friendly_name = friendly_name;
       this.open = false;
       this.$router.push({ name: "home" });
-      const api = await Api().get("/apis/" + name);
-      store.dispatch("updateEndpointNameFor", {
-        name,
-        endpoints: api.data.apis
-      });
 
       const apiGrouping = {
         name,
@@ -44,7 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["apiList", "grouping"]),
+    ...mapGetters(["dataFriendlyNames", "grouping"]),
     paragraphText() {
       if (this.friendly_name) {
         return this.friendly_name;

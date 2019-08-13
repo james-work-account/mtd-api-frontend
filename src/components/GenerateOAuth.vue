@@ -33,7 +33,7 @@ export default {
       this.disabled = true;
       const res = await Promise.race([
         Api().get(`/generate?userType=${this.userType}`),
-        new Promise((resolve, reject) => setTimeout(resolve, 5000, null)) // return null if auth call takes longer than 5 seconds
+        new Promise((resolve, reject) => setTimeout(resolve, 10000, null)) // return null if auth call takes longer than 10 seconds
       ]);
       if (res) {
         store.dispatch("updateAuth", res.data); // only happens if res is not null

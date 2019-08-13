@@ -5,8 +5,6 @@ const axios = require('axios')
 const generate = require('./server_functions/generate')
 const send = require('./server_functions/send')
 const apiInfo = require('./server_functions/apiInfo')
-// hit RAML
-const raml = require("raml-parser")
 
 const app = express()
 app.use(morgan('combined'))
@@ -34,18 +32,6 @@ app.get('/apis/api-info', async (req, res) => {
   const response = await apiInfo.getEndpointNames(apis)
   res.send(response)
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get('/apis/api-info/:api', async (req, res) => {
   const response = await apiInfo.getEndpointsFor(req.params)
@@ -78,16 +64,24 @@ app.get('/generate', async (req, res) => {
 /** HIT OUR APIS */
 app.post('/send', async (req, res) => {
   const body = req.body;
-  const queryParameters = req.query
+  const {
+    method
+  } = req.query
 
-  const url = send.getUrl(body, queryParameters)
-  let headers = {
-    "Authorization": body["Authorization"],
-    "Accept": body["Accept"]
+  let headers = {}
+
+  // Some APIs require no Authorization header (according to docs)
+  if (body["Authorization"]) {
+    headers["Authorization"] = body["Authorization"]
+  }
+
+  // In case Accept header isn't specified in docs
+  if (body["Accept"]) {
+    headers["Accept"] = body["Accept"]
   }
 
   // Add Content-Type
-  if (queryParameters.method === "POST") {
+  if (method === "POST" || method === "PUT") {
     headers["Content-Type"] = body["Content-Type"]
   }
 
@@ -96,7 +90,7 @@ app.post('/send', async (req, res) => {
     headers["Gov-Test-Scenario"] = body["Gov-Test-Scenario"]
   }
 
-  let response = await send.getResponse(url, body, headers, queryParameters);
+  let response = await send.getResponse(method, body, headers);
   res.send(response)
 })
 

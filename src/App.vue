@@ -2,8 +2,11 @@
   <div id="app">
     <Header />
     <main>
-      <NavBar v-if="data" />
-      <router-view class="content" />
+      <div v-if="loading"></div>
+      <template v-else>
+        <NavBar v-if="data" />
+        <router-view class="content" />
+      </template>
     </main>
   </div>
 </template>
@@ -20,14 +23,34 @@ export default {
     Header,
     NavBar
   },
+  data() {
+    return {
+      loading: false
+    };
+  },
   computed: {
     ...mapGetters(["data"])
   },
   async created() {
-    const apis = await Api().get("/apis");
-    if (apis) {
-      store.dispatch("updateApiList", apis.data); // only happens if apis is not null
+    this.loading = true;
+    if (!localStorage.getItem("data")) {
+      const resApis = await Api().get("/apis");
+      if (resApis) {
+        const apis = resApis.data.map(el => el.name);
+        let obj = {};
+        for (let api of apis) {
+          const d = await Api()
+            .get("/apis/api-info/" + api)
+            .catch(err => console.log(`Failed to fetch data for ${api}`));
+          obj = { ...obj, [api]: d.data };
+        }
+        store.dispatch("updateData", obj); // only happens if apis is not null
+      }
+    } else {
+      const obj = JSON.parse(localStorage.getItem("data"));
+      store.dispatch("updateData", obj);
     }
+    this.loading = false;
   }
 };
 </script>

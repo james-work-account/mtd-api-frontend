@@ -1,40 +1,7 @@
-const data = require('../../src/data/data')
 const axios = require('axios')
 
-const baseURL = (apiGrouping) => {
-  switch (apiGrouping) {
-    case "self-assessment-api":
-      return "https://test-api.service.hmrc.gov.uk/self-assessment/ni"
-    case "vat":
-      return "https://test-api.service.hmrc.gov.uk/organisations/vat"
-    case "losses":
-      return "https://test-api.service.hmrc.gov.uk/individual/losses"
-    default:
-      return "um no"
-  }
-
-}
-
-const getUrl = (body, {
-  request,
-  apiGrouping
-}) => {
-  const requestUrl = data[apiGrouping][request]["header-url"]
-  let url = baseURL(apiGrouping) + requestUrl;
-  for (key in body) {
-    if (body[key].length !== 0) {
-      url = url.replace(`{${key}}`, body[key])
-    } else {
-      url = url.replace(`${key}={${key}}`, body[key])
-    }
-  }
-  url = url.replace(/\w+={\w+}/g, "") // remove any extra where value is unchanged after previous replaces
-  return url
-}
-
-const getResponse = async (url, body, headers, {
-  method
-}) => {
+const getResponse = async (method, body, headers) => {
+  const url = body.url
   try {
     if (method === "POST") {
       return await axios.post(url, JSON.parse(body["Body"]), {
@@ -108,12 +75,13 @@ const getFallbackError = (error) => {
       }
     }
   } else if (error.name === "TypeError" && error.message === "Cannot read property 'status' of undefined") {
-    // probably offline - thrown when resp or error.response doesn't have a status
+    // thrown when trying to read a value which is undefined (sometimes happens when offline or if I've forgotten to properly catch any optional properties)
+    // e.g. in the JSON let body = { "valueA": 123 }, trying to do x["valueB"] without catching it properly
     return {
       status: 500,
       data: {
         code: "INTERNAL_SERVER_ERROR",
-        message: "Probably offline lol (or you've been fiddling with code you don't understand)"
+        message: "There are a number of reasons this could occur. Please contact a developer for more information."
       }
     }
   } else {
@@ -129,6 +97,5 @@ const getFallbackError = (error) => {
 }
 
 module.exports = {
-  getUrl,
   getResponse
 }

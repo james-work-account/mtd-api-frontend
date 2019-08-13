@@ -1,6 +1,5 @@
 const axios = require('axios')
 const jsdom = require("jsdom")
-const _ = require("underscore")
 
 const getAllApis = async () => {
   const page = await axios.get("https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
@@ -23,15 +22,24 @@ const getAllApis = async () => {
 }
 
 const getEndpointNames = async (apis) => {
-  let arr = [];
-  for (const api of apis) {
-    const page = await axios.get(`https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${api}`)
-    const document = new jsdom.JSDOM(page.data).window.document
-    const apiGroups = getIndividualApiNames(api, document)
-    arr = [...arr, Object.assign(api, apiGroups)]
-  }
-  return {
-    arr
+  try {
+    let obj = {};
+    for (const api of apis) {
+      const details = await getEndpointsFor({
+        api
+      })
+      obj = {
+        ...obj,
+        [api]: details
+      }
+    }
+    return obj
+  } catch (error) {
+    console.log(error)
+    return {
+      status: error.response.status,
+      body: error.response.data
+    }
   }
 }
 
@@ -56,6 +64,9 @@ const getEndpointsFor = async ({
   const page = await axios.get(`https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${api}`)
 
   const document = new jsdom.JSDOM(page.data).window.document
+
+  const friendly_name = document.title.split(" - ")[0]
+
   const baseUrl = Array.from(document.querySelectorAll("#section table tbody tr"))
     .filter(elem => {
       if (elem.querySelector("th span")) {
@@ -66,13 +77,12 @@ const getEndpointsFor = async ({
     })
     .map(elem => elem.querySelector("td").innerHTML)[0]
 
-  const endpoints = await getIndividualApiNames(api, document)
+  const endpointNames = await getIndividualApiNames(api, document)
 
-  let arr = []
+  let endpoints = {}
   for (const {
       name
-    } of endpoints) {
-    console.log(name)
+    } of endpointNames) {
     const endpointSelector = document.querySelector(`#${name}`)
     const splitEndpoint = name.split("-")
 
@@ -110,12 +120,13 @@ const getEndpointsFor = async ({
       .map(elem => elem.innerHTML)
 
     const gov_test_scenarios = request_headers.includes("Gov-Test-Scenario") ?
-      Array.from(document.querySelector(`#sandbox-data_${name} > table > tbody`).querySelectorAll("tr > td:nth-child(1)")).map(el => el.textContent) :
-      null
+      Array.from(document.querySelector(`#sandbox-data_${name} > table > tbody`).querySelectorAll("tr > td:nth-child(1)")).map(el => el.textContent) : []
+
+    const http_verb = name.split("-")[name.split("-").length - 1].toUpperCase()
 
     const obj = {
-      name,
       endpoint_name,
+      http_verb,
       path,
       path_params,
       query_params,
@@ -123,12 +134,16 @@ const getEndpointsFor = async ({
       gov_test_scenarios
     }
 
-    arr = [...arr, obj]
+    endpoints = {
+      ...endpoints,
+      [name]: obj
+    }
   }
 
   return {
     baseUrl,
-    arr
+    friendly_name,
+    endpoints
   }
 }
 

@@ -13,10 +13,10 @@ export default new Vuex.Store({
     "self-assessment-api": {
       "Accept": "application/vnd.hmrc.2.0+json"
     },
-    "vat": {
+    "vat-api": {
       "Accept": "application/vnd.hmrc.1.0+json",
     },
-    "losses": {
+    "individual-losses-api": {
       "Accept": "application/vnd.hmrc.1.0+json"
     },
     "Content-Type": "application/json",
@@ -28,29 +28,14 @@ export default new Vuex.Store({
     "accountId": "XPIT00357725120",
     "periodKey": "A332",
     "lossId": "1234568790ABCDE",
+    "status": "O",
     "typeOfLoss": "self-employment",
     data: {},
     "apiGrouping": null
   },
   mutations: {
-    UPDATE_API_LIST(state, apis) {
-      state.apis = apis
-    },
-    UPDATE_ENDPOINT_NAMES_FOR(state, {
-      grouping,
-      endpoints
-    }) {
-      state.data[grouping] = endpoints
-    },
-    UPDATE_ENDPOINT_DETAILS_FOR(state, {
-      grouping,
-      endpoint,
-      data
-    }) {
-      state.data[grouping][endpoint] = {
-        ...state.data[grouping][endpoint],
-        ...data
-      }
+    UPDATE_DATA(state, data) {
+      state.data = data
     },
     UPDATE_VRN(state, {
       vrn
@@ -73,27 +58,16 @@ export default new Vuex.Store({
       state["Authorization"] = accessToken
     },
     UPDATE_API_GROUPING(state, apiGrouping) {
-      state["apiGrouping"] = apiGrouping
+      state.apiGrouping = apiGrouping
     }
   },
   actions: {
     updateEndpoints(context, data) {
-      context.commit("endpoints", )
+      context.commit("endpoints", data)
     },
-    updateApiList(context, data) {
-      const apis = Object.assign({}, ...(data.map(item => ({
-        [item.name]: item.friendly_name
-      }))))
-      context.commit("UPDATE_API_LIST", apis)
-    },
-    updateEndpointNameFor(context, data) {
-      const endpoints = Object.assign({}, ...(data.endpoints.map(item => ({
-        [item.friendly_name]: item
-      }))))
-      context.commit("UPDATE_ENDPOINT_NAMES_FOR", {
-        "grouping": data.name,
-        endpoints
-      })
+    updateData(context, data) {
+      context.commit("UPDATE_DATA", data)
+      localStorage.setItem("data", JSON.stringify(data))
     },
     updateEndpointDetailsFor(context, data) {
       context.commit("UPDATE_ENDPOINT_DETAILS_FOR", data)
@@ -109,9 +83,6 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    apiList: state => {
-      return state.apis
-    },
     nino: state => {
       return state.nino
     },
@@ -123,18 +94,36 @@ export default new Vuex.Store({
     },
     data: (state) => {
       return (name) => {
-        if (state.apiGrouping) {
+        if (state.apiGrouping.name) {
           const grouping = state.apiGrouping.name
-          return state.data[grouping][name]
+          return state.data[grouping].endpoints[name]
         } else {
           return null
         }
       }
     },
+    baseUrl: (state) => {
+      if (state.apiGrouping.name) {
+        const grouping = state.apiGrouping.name
+        return state.data[grouping].baseUrl
+      } else {
+        return null
+      }
+    },
+    dataFriendlyNames: (state) => {
+      const keys = Object.keys(state.data)
+      const x = keys.map(key => {
+        return {
+          name: key,
+          friendly_name: state.data[key].friendly_name
+        }
+      })
+      return x
+    },
     dataKeys: (state) => {
       if (state.apiGrouping) {
         const grouping = state.apiGrouping.name
-        return Object.keys(state.data[grouping])
+        return Object.keys(state.data[grouping].endpoints)
       } else {
         return []
       }

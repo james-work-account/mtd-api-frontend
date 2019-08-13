@@ -34,43 +34,99 @@ node server.js (if you don't have nodemon installed)
 
 ---
 
-## Adding new APIs
+## Data Structures
 
-#### Add under the relevant section in `src/data.js`
+### /generate
 
-- Must be in the format:
+NOTE: Will only generate currently for APIs using the read/write vat & self-assessment scopes. Contact a developer or add your scope to backend/server_functions/generate.js to make this work with your API.
 
 ```
-"NAME": {
-  "header-url": "URL",
-  "method": "METHOD",
-  "grouping": "GROUPING",
-  "headers": ["HEADERS"],
-  "scenarios": ["SCENARIOS"]
+{
+  vrn
+  nino
+  mtdItId
+  accessToken
 }
 ```
 
-- Example (under "self-assessment"):
+### /send
+
+#### Request
 
 ```
-"Trigger a tax calculation v1.0": {
-  "header-url": "/{nino}/calculations",
-  "method": "POST",
-  "grouping": "TaxCalc",
-  "headers": [
-    "Authorization", "Content-Type", "Accept", "Gov-Test-Scenario"
-  ],
-  "scenarios": [
-    "AGENT_NOT_SUBSCRIBED", "AGENT_NOT_AUTHORIZED", "CLIENT_NOT_SUBSCRIBED"
+/send?method={METHOD}&url={URL} (URL includes any query parameters)
+
+{
+  url
+  headers {
+    k: v (for each header)
+  }
+  body (if method is POST or PUT)
+}
+```
+
+#### Response
+
+See https://developer.service.hmrc.gov.uk/api-documentation/docs/api for the correct expected body for your request.
+
+### /apis
+
+```
+[
+  {
+    name
+    friendly_name
+  }
+]
+```
+
+### /apis/api-info
+
+Remember: put API names in comma-separated list under the Header `apis` (no spaces)
+Less quick than `/apis`. Need to work out what should actually go here.
+
+```
+[
+  arr [
+    {
+      :name {
+        baseUrl
+        arr [
+          {
+            name
+            endpoint_name
+            path
+            path_params[string]
+            query_params[string]
+            request_headers[string]
+            gov_test_scenarios[string]
+          }
+        ]
+      }
+    }
+  ]
+]
+```
+
+### /apis/api-info/:api
+
+```
+{
+  baseUrl
+  arr [
+    {
+      name
+      endpoint_name
+      http_verb
+      path
+      path_params[string]
+      query_params[string]
+      request_headers[string]
+      gov_test_scenarios[string]
+    }
   ]
 }
 ```
-
-#### Be aware
-  - `scenarios` is only necessary if one of the headers is Gov-Test-Scenario
-  - Variables will be automatically pulled out of the `header-url` if you wrap the variable in curly braces (`{}`)
-  - A Body will automatically be made available if the method is `POST` or `PUT`
-  - If the `grouping` doesn't exist, make sure you make the NavBar entry look pretty with some nice CSS in `src/components/NavBar.vue`
 
 ---
 
