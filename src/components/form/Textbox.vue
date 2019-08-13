@@ -16,7 +16,7 @@
       :placeholder="'Enter or select a valid ' + param + '...'"
       :value="govTestValue"
       :class="{ left : isHeaders }"
-    >
+    />
     <input
       v-else
       type="text"
@@ -25,7 +25,7 @@
       :placeholder="'Enter a valid ' + param + '...'"
       :value="value"
       :class="{ left : isHeaders }"
-    >
+    />
 
     <ul :class="{ display : showScenarios }" v-if="isGovTestScenario" id="scenarios">
       <li @click="clearSelected">&lt;CLEAR&gt;</li>
@@ -64,16 +64,21 @@ export default {
   computed: {
     ...mapGetters(["grouping", "data"]),
     value() {
-      if (store.state[this.grouping][this.param]) {
-        return store.state[this.grouping][this.param];
+      if (
+        store.state[this.grouping.name] &&
+        store.state[this.grouping.name][this.param]
+      ) {
+        return store.state[this.grouping.name][this.param];
       } else {
         return store.state[this.param];
       }
     },
     govTestArray() {
-      const data = this.data(this.$route.params.page);
-      if (data.scenarios) {
-        return data.scenarios;
+      const queryData = this.data(this.$route.params.page);
+      if (queryData.gov_test_scenarios) {
+        return queryData.gov_test_scenarios.filter(
+          el => !el.toLowerCase().includes("default")
+        );
       } else {
         return [];
       }

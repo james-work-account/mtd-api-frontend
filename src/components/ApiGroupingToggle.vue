@@ -1,67 +1,82 @@
 <template>
-  <ul class="api-grouping-toggle">
-    <li class="dropdown-menu" @click="open = !open">{{dictionary[grouping]}} (click to switch)</li>
-    <li
-      v-show="open"
-      :class="{active: grouping === sa}"
-      @click="toggleGrouping(sa)"
-    >{{dictionary[sa]}}</li>
-    <li
-      v-show="open"
-      :class="{active: grouping === vat}"
-      @click="toggleGrouping(vat)"
-    >{{dictionary[vat]}}</li>
-    <li
-      v-show="open"
-      :class="{active: grouping === losses}"
-      @click="toggleGrouping(losses)"
-    >{{dictionary[losses]}}</li>
-  </ul>
+  <div class="api-grouping-toggle">
+    <p class="dropdown-menu" @click="open = !open">{{paragraphText}} (click to switch)</p>
+
+    <ul v-show="open">
+      <li
+        v-for="(obj, index) in dataFriendlyNames"
+        :key="index"
+        :class="{active: grouping === obj.name}"
+        @click="toggleGrouping(obj.name, obj.friendly_name)"
+      >{{obj.friendly_name}}</li>
+    </ul>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import store from "@/store";
+import Api from "@/services/Api";
 
 export default {
   data() {
     return {
-      sa: "self-assessment",
-      vat: "vat",
-      losses: "losses",
-      dictionary: {
-        "self-assessment": "Self Assessment",
-        vat: "Vat",
-        losses: "Individual Losses"
-      },
-      open: false
+      open: false,
+      friendly_name: null
     };
   },
   methods: {
-    toggleGrouping(apiGrouping) {
-      store.dispatch("updateApiGrouping", apiGrouping);
-      this.$router.push({ name: "home" });
+    async toggleGrouping(name, friendly_name) {
+      this.friendly_name = friendly_name;
       this.open = false;
+      this.$router.push({ name: "home" });
+
+      const apiGrouping = {
+        name,
+        friendly_name
+      };
+      store.dispatch("updateApiGrouping", apiGrouping);
     }
   },
   computed: {
-    ...mapGetters(["grouping"])
+    ...mapGetters(["dataFriendlyNames", "grouping"]),
+    paragraphText() {
+      if (this.friendly_name) {
+        return this.friendly_name;
+      } else {
+        return "Select an API";
+      }
+    }
   }
 };
 </script>
 
 <style>
 .api-grouping-toggle {
-  list-style: none;
+  background: #fff;
   align-items: center;
-  max-height: 1em;
+  font-size: 20px;
+  border: 1px solid #000;
+}
+.api-grouping-toggle p {
+  text-align: center;
+  padding: 0.5em 0;
+  cursor: pointer;
+}
+.api-grouping-toggle ul {
+  list-style: none;
+  position: fixed;
+  font-size: 20px;
+  max-width: calc(((100vw - 2em) * (6 / 8) * (9 / 10) / 2) - 1em - 5px);
+  overflow-y: auto;
+  max-height: 10em;
+  overflow-x: hidden;
 }
 .api-grouping-toggle li {
   float: left;
   border: 1px solid #000;
   color: #000;
   background: #fff;
-  font-size: 20px;
   text-align: center;
   padding: 0.5em 0;
   cursor: pointer;

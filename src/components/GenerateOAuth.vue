@@ -7,19 +7,26 @@ import axios from "axios";
 import Api from "@/services/Api";
 import store from "@/store";
 import { mapGetters } from "vuex";
+import { setTimeout } from "timers";
 
 export default {
   name: "generateOAuth",
   data() {
     return {
-      disabled: false
+      disabled: false,
+      userType: "individuals"
     };
   },
   methods: {
     async generateOAuth() {
       this.disabled = true;
-      const res = await Api().get(`/generate?apiGrouping=${this.grouping}`);
-      store.dispatch("updateAuth", res.data);
+      const res = await Promise.race([
+        Api().get(`/generate?userType=${this.userType}`),
+        new Promise((resolve, reject) => setTimeout(resolve, 10000, null)) // return null if auth call takes longer than 10 seconds
+      ]);
+      if (res) {
+        store.dispatch("updateAuth", res.data); // only happens if res is not null
+      }
       this.disabled = false;
     }
   },
@@ -38,16 +45,11 @@ button.generate-auth {
   text-align: center;
   padding: 0.5em;
   cursor: pointer;
-  border: 1px solid #000;
 }
 button.generate-auth:disabled {
   background: #888;
   border: 1px solid #888;
   color: #ccc;
-}
-@media (max-width: 680px) {
-  button.generate-auth {
-    margin: 0 1em 1em;
-  }
+  cursor: unset;
 }
 </style>

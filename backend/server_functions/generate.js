@@ -1,9 +1,9 @@
 const axios = require('axios')
 const puppeteer = require('puppeteer')
 
-const generateUser = async () => {
+const generateUser = async (userType) => {
   const url =
-    "https://test-api.service.hmrc.gov.uk/create-test-user/individuals";
+    `https://test-api.service.hmrc.gov.uk/create-test-user/${userType}`;
   const body = JSON.parse(`{"serviceNames":["mtd-income-tax", "mtd-vat"]}`);
   const headers = {
     Accept: "application/vnd.hmrc.1.0+json",

@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <Header/>
+    <Header />
     <main>
-      <NavBar/>
-      <router-view class="content"/>
+      <Loading v-if="loading" />
+      <template v-else>
+        <NavBar v-if="data" />
+        <router-view class="content" />
+      </template>
     </main>
   </div>
 </template>
@@ -11,11 +14,45 @@
 <script>
 import Header from "@/components/Header";
 import NavBar from "@/components/NavBar";
+import Loading from "@/components/Loading";
+import Api from "@/services/Api";
+import store from "@/store";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     Header,
-    NavBar
+    NavBar,
+    Loading
+  },
+  data() {
+    return {
+      loading: false
+    };
+  },
+  computed: {
+    ...mapGetters(["data"])
+  },
+  async created() {
+    this.loading = true;
+    if (!localStorage.getItem("data")) {
+      const resApis = await Api().get("/apis");
+      if (resApis) {
+        const apis = resApis.data.map(el => el.name);
+        let obj = {};
+        for (let api of apis) {
+          const d = await Api()
+            .get("/apis/api-info/" + api)
+            .catch(err => console.log(`Failed to fetch data for ${api}`));
+          obj = { ...obj, [api]: d.data };
+        }
+        store.dispatch("updateData", obj); // only happens if apis is not null
+      }
+    } else {
+      const obj = JSON.parse(localStorage.getItem("data"));
+      store.dispatch("updateData", obj);
+    }
+    this.loading = false;
   }
 };
 </script>

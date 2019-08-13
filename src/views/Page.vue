@@ -1,8 +1,8 @@
 <template>
   <section class="body">
     <section class="heading">
-      <h1>{{this.$route.params.page}}</h1>
-      <h2>{{queryData["header-url"]}}</h2>
+      <h1>{{queryData.endpoint_name}}</h1>
+      <h2>{{url}}</h2>
     </section>
     <InputForm :submitRequest="submitRequest" :disabled="buttonIsDisabled" />
     <OutputField :body="output" />
@@ -36,8 +36,17 @@ export default {
           jsonObject[key] = value;
         }
       }
+      let url = this.baseUrl + this.url;
+      for (const key in jsonObject) {
+        if (jsonObject[key].length !== 0) {
+          url = url.replace(`{${key}}`, jsonObject[key]);
+        } else {
+          url = url.replace(`${key}={${key}}`, jsonObject[key]);
+        }
+      }
+      jsonObject = { ...jsonObject, url };
       const res = await Api().post(
-        `/send?method=${this.queryData.method}&request=${this.$route.params.page}&apiGrouping=${this.grouping}`,
+        `/send?method=${this.queryData.http_verb}`,
         jsonObject
       );
       this.output = res.data;
@@ -45,9 +54,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["data", "grouping"]),
+    ...mapGetters(["data", "grouping", "baseUrl"]),
     queryData() {
       return this.data(this.$route.params.page);
+    },
+    url() {
+      const queryParams = this.queryData["query_params"]
+        .map(el => `${el}={${el}}`)
+        .join("&");
+      return queryParams.length > 0
+        ? `${this.queryData["path"]}?${queryParams}`
+        : `${this.queryData["path"]}`;
     }
   }
 };

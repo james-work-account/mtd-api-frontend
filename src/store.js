@@ -1,22 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import data from '@/data/data'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    apis: [],
     vrn: null,
     nino: null,
     mtdItId: null,
     "Authorization": null,
-    "self-assessment": {
+    "self-assessment-api": {
       "Accept": "application/vnd.hmrc.2.0+json"
     },
-    "vat": {
+    "vat-api": {
       "Accept": "application/vnd.hmrc.1.0+json",
     },
-    "losses": {
+    "individual-losses-api": {
       "Accept": "application/vnd.hmrc.1.0+json"
     },
     "Content-Type": "application/json",
@@ -28,11 +28,15 @@ export default new Vuex.Store({
     "accountId": "XPIT00357725120",
     "periodKey": "A332",
     "lossId": "1234568790ABCDE",
+    "status": "O",
     "typeOfLoss": "self-employment",
-    data: data,
-    "apiGrouping": "self-assessment"
+    data: {},
+    "apiGrouping": null
   },
   mutations: {
+    UPDATE_DATA(state, data) {
+      state.data = data
+    },
     UPDATE_VRN(state, {
       vrn
     }) {
@@ -54,10 +58,20 @@ export default new Vuex.Store({
       state["Authorization"] = accessToken
     },
     UPDATE_API_GROUPING(state, apiGrouping) {
-      state["apiGrouping"] = apiGrouping
+      state.apiGrouping = apiGrouping
     }
   },
   actions: {
+    updateEndpoints(context, data) {
+      context.commit("endpoints", data)
+    },
+    updateData(context, data) {
+      context.commit("UPDATE_DATA", data)
+      localStorage.setItem("data", JSON.stringify(data))
+    },
+    updateEndpointDetailsFor(context, data) {
+      context.commit("UPDATE_ENDPOINT_DETAILS_FOR", data)
+    },
     updateAuth(context, data) {
       context.commit("UPDATE_VRN", data)
       context.commit("UPDATE_NINO", data)
@@ -80,13 +94,39 @@ export default new Vuex.Store({
     },
     data: (state) => {
       return (name) => {
-        const grouping = state.apiGrouping
-        return state.data[grouping][name]
+        if (state.apiGrouping.name) {
+          const grouping = state.apiGrouping.name
+          return state.data[grouping].endpoints[name]
+        } else {
+          return null
+        }
       }
     },
+    baseUrl: (state) => {
+      if (state.apiGrouping.name) {
+        const grouping = state.apiGrouping.name
+        return state.data[grouping].baseUrl
+      } else {
+        return null
+      }
+    },
+    dataFriendlyNames: (state) => {
+      const keys = Object.keys(state.data)
+      const x = keys.map(key => {
+        return {
+          name: key,
+          friendly_name: state.data[key].friendly_name
+        }
+      })
+      return x
+    },
     dataKeys: (state) => {
-      const grouping = state.apiGrouping
-      return Object.keys(state.data[grouping])
+      if (state.apiGrouping) {
+        const grouping = state.apiGrouping.name
+        return Object.keys(state.data[grouping].endpoints)
+      } else {
+        return []
+      }
     },
     grouping: (state) => {
       return state.apiGrouping

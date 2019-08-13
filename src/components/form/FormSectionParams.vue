@@ -2,9 +2,9 @@
   <section>
     <h3>Parameters:</h3>
     <div class="inputs">
-      <Textbox v-for="param in params" :key="param" :param="param"/>
+      <Textbox v-for="param in params" :key="param" :param="param" />
       <LargeTextbox
-        v-if="queryData.method === 'POST' || queryData.method === 'PUT'"
+        v-if="queryData.http_verb === 'POST' || queryData.http_verb === 'PUT'"
         :param="'Body'"
       />
     </div>
