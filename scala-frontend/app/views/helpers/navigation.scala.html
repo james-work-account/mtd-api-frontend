@@ -1,0 +1,14 @@
+@(api: String, endpointList: Seq[ApiListItem])
+
+<nav>
+    <div class="burger" onclick="toggleNav()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <ul>
+        @for(item <- endpointList) {
+            <li><a class="nav-item" href="@routes.ApiController.endpointGet(api, item.name)"><div class="name">@{item.friendly_name}</div></a></li>
+        }
+    </ul>
+</nav>
