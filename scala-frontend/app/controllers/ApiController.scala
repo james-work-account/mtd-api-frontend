@@ -24,8 +24,10 @@ class ApiController @Inject()(service: DocumentationService, cc: ControllerCompo
   }
 
   def endpointGet(api: String, endpoint: String): Action[AnyContent] = Action.async {
-    val serviceOutcome = service.endpoint(api, endpoint)
-    Future.successful(Ok(serviceOutcome.toString))
+    service.endpoint(api, endpoint).map {
+      serviceOutcome =>
+        Ok(serviceOutcome.toString)
+    }
   }
 
 }
