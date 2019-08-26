@@ -1,40 +1,41 @@
 package connectors
 
 import com.google.inject.ImplementedBy
-import config.AppConfig
 import javax.inject.{Inject, Singleton}
-import models.{Api, ApiListItem}
+import models.errors.ConnectorError
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.libs.json.Reads
+import play.api.Logger
 import play.api.libs.ws.WSClient
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @ImplementedBy(classOf[DocumentationConnectorImpl])
 trait DocumentationConnector {
-  def getApiList: Document
-  def getApiEndpointList(api: String): Document
-  def getApiEndpoint(api: String): Future[Api] = Future.successful(Api("","",Seq()))
+  def getApiList: Future[Document]
+  def getApiEndpoint(api: String): Future[Document]
 }
 
 @Singleton
-class DocumentationConnectorImpl @Inject()(ws: WSClient, appConfig: AppConfig) extends DocumentationConnector {
-  override def getApiList: Document = {
-    get[Seq[ApiListItem]]("https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+class DocumentationConnectorImpl @Inject()(ws: WSClient) extends DocumentationConnector {
+  override def getApiList: Future[Document] = {
+    get("https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
   }
 
-  override def getApiEndpointList(api: String): Document = {
-    get[Seq[ApiListItem]](s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${api}")
+  override def getApiEndpoint(api: String): Future[Document] = {
+    get(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${api}")
   }
-//
-//  override def getApiEndpoint(api: String): Future[Api] = {
-//    get[Api](s"/apis/api-info/$api", Api("", "", Seq()))
-//  }
 
-  private def get[T](url: String): Document = {
-    Jsoup.connect(url).ignoreContentType(true).get()
+  private def get(url: String): Future[Document] = {
+    ws.url(url).get().map {
+      response =>
+        Jsoup.parse(response.body)
+    }.recover {
+      case ex =>
+        Logger.logger.error(ex.getMessage, ex)
+        throw ConnectorError(ex.getMessage, ex)
+    }
   }
 
 }

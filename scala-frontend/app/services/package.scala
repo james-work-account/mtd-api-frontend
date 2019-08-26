@@ -1,6 +1,5 @@
-import models.ApiListItem
+import models.{ApiListItem, Endpoint}
 import org.jsoup.nodes.Document
-import play.api.libs.json.{JsObject, Json}
 
 package object services {
 
@@ -8,8 +7,11 @@ package object services {
 
   case class EndpointsListOutcome(apis: ApisOutcome, endpoints: Seq[ApiListItem])
 
+  case class EndpointOutcome(apis: ApisOutcome, endpoints: Seq[ApiListItem], endpoint: Endpoint)
+
   // Pretending I have a proper database
   var apis: Option[Seq[ApiListItem]] = None
   var endpointsList: Map[String, Seq[ApiListItem]] = Map()
   var apiPages: Map[String, Document] = Map()
+  var detailedEndpointsList: Map[String, Endpoint] = Map()
 }
