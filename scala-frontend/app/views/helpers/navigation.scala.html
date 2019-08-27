@@ -1,4 +1,4 @@
-@(api: String, endpointList: Seq[ApiListItem])
+@(api: String, endpointList: Seq[ApiListItem], selectedEndpoint: String = "")
 
 <nav>
     <div class="burger" onclick="toggleNav()">
@@ -8,7 +8,7 @@
     </div>
     <ul>
         @for(item <- endpointList) {
-            <li><a class="nav-item" href="@routes.ApiController.endpointGet(api, item.name)"><div class="name">@{item.friendly_name}</div></a></li>
+            <li><a class='nav-item@{if(item.friendly_name == selectedEndpoint) " selected"}' href="@routes.ApiController.endpointGet(api, item.name)">@{item.friendly_name}</a></li>
         }
     </ul>
 </nav>

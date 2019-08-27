@@ -6,24 +6,26 @@
     <h1>
         <a href="@routes.HomeController.index()">URL Helper</a>
     </h1>
-    <div class="header-menu">
-        <div class="header-burger" onclick="toggleNav()">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div class="header-menu-contents">
-            @* API Toggle *@
-            <div class="api-grouping-toggle">
-                <button class="dropdown-menu" onclick="toggleApiList()" accesskey="a">@paragraphText</button>
-                <ul class="hidden">
+    @if(apiList.nonEmpty) {
+        <div class="header-menu">
+            <div class="header-burger" onclick="toggleNav()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="header-menu-contents">
+                @* API Toggle *@
+                <div class="api-grouping-toggle">
+                    <button class="dropdown-menu" onclick="toggleApiList()" accesskey="a">@paragraphText</button>
+                    <ul class="hidden">
                     @for(item <- apiList) {
                         <li><a href="@routes.ApiController.index(item.name)">@item.friendly_name</a></li>
                     }
-                </ul>
+                    </ul>
+                </div>
+                @* Generate OAuth *@
             </div>
-            @* Generate OAuth *@
-        </div>
 
-    </div>
+        </div>
+    }
 </header>

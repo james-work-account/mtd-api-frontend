@@ -18,24 +18,13 @@ trait DocumentationConnector {
 }
 
 @Singleton
-class DocumentationConnectorImpl @Inject()(ws: WSClient) extends DocumentationConnector {
+class DocumentationConnectorImpl @Inject()(implicit val ws: WSClient) extends DocumentationConnector {
   override def getApiList: Future[Document] = {
-    get("https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
+    handleDocument("https://developer.service.hmrc.gov.uk/api-documentation/docs/api")
   }
 
   override def getApiEndpoint(api: String): Future[Document] = {
-    get(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${api}")
-  }
-
-  private def get(url: String): Future[Document] = {
-    ws.url(url).get().map {
-      response =>
-        Jsoup.parse(response.body)
-    }.recover {
-      case ex =>
-        Logger.logger.error(ex.getMessage, ex)
-        throw ConnectorError(ex.getMessage, ex)
-    }
+    handleDocument(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/${api}")
   }
 
 }

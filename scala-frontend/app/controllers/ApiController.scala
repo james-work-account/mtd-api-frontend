@@ -1,14 +1,17 @@
 package controllers
 
+import connectors.ApiConnector
 import javax.inject.{Inject, Singleton}
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
+import play.api.Logger
+import play.api.libs.json.{JsObject, JsValue}
+import play.api.mvc.{AbstractController, Action, AnyContent, AnyContentAsJson, ControllerComponents}
 import services.DocumentationService
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class ApiController @Inject()(service: DocumentationService, cc: ControllerComponents) extends AbstractController(cc) {
+class ApiController @Inject()(connector: ApiConnector, service: DocumentationService, cc: ControllerComponents) extends AbstractController(cc) {
 
   def index(api: String): Action[AnyContent] = Action.async {
     service.endpointList(api).map {
@@ -19,15 +22,63 @@ class ApiController @Inject()(service: DocumentationService, cc: ControllerCompo
         val endpointList = serviceOutcome.endpoints
 
         Ok(views.html.pages.endpointList(message, apiList, endpointList, selectedApi))
+    }.recover {
+      case ex =>
+        Logger.logger.error(ex.getMessage, ex)
+        InternalServerError(views.html.pages.internalServerError())
     }
 
   }
 
-  def endpointGet(api: String, endpoint: String): Action[AnyContent] = Action.async {
+  def endpointGet(api: String, endpoint: String): Action[AnyContent] = Action.async { implicit request =>
     service.endpoint(api, endpoint).map {
       serviceOutcome =>
-        Ok(serviceOutcome.toString)
+        val apiList = serviceOutcome.apis
+        val message = apiList.find(_.name == api).map(_.friendly_name).getOrElse("")
+        val selectedApi = apiList.find(_.name == api)
+        val endpointList = serviceOutcome.endpoints
+        val endpoint = serviceOutcome.endpoint
+
+        Ok(views.html.pages.individualEndpoint(message, apiList, endpointList, selectedApi, endpoint, request.host))
+    }.recover {
+      case ex =>
+        Logger.logger.error(ex.getMessage, ex)
+        InternalServerError(views.html.pages.internalServerError())
     }
   }
+
+  /** Body format:
+   *
+   * {
+   *   url (full, with all query parameters)
+   *   headers {
+   *     k: v (for each header)
+   *   }
+   *   body (if method is POST or PUT)
+   * }
+   *
+   */
+  def send(api: String, endpoint: String, method: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
+    request.body match {
+      case body =>
+        val urlO: Option[String] = (body \\ "url").headOption.map(_.as[String])
+        val headersO: Option[JsObject] = (body \\ "headers").headOption.flatMap(_.asOpt[JsObject])
+        val postOrPutBody = if(checkMethod(method)) (body \\ "body").headOption else None
+        println(scala.Console.YELLOW + urlO + scala.Console.RESET)
+        println(scala.Console.YELLOW + headersO + scala.Console.RESET)
+        println(scala.Console.YELLOW + postOrPutBody + scala.Console.RESET)
+        (urlO, headersO, postOrPutBody) match {
+          case (Some(url), Some(headers), optionalBody) =>
+            connector.sendRequest(url, method, optionalBody, headers).map {
+              res =>
+                println(scala.Console.YELLOW + res + scala.Console.RESET)
+                Ok(res)
+            }
+          case (_, _, _) => Future.successful(Redirect(routes.ApiController.endpointGet(api, endpoint)))
+        }
+    }
+  }
+
+  private def checkMethod(method: String): Boolean = method == "POST" || method == "PUT"
 
 }

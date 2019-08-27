@@ -12,7 +12,7 @@ import play.api.libs.json.Json
 import scala.annotation._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 @ImplementedBy(classOf[DocumentationServiceImpl])
 trait DocumentationService {
