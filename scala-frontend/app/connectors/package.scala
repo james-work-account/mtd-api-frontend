@@ -54,7 +54,11 @@ package object connectors {
   private def transformDocument(res: WSResponse): Document = Jsoup.parse(res.body)
 
   private def transformJson(res: WSResponse): JsValue = {
-    Json.obj("status" -> res.status, "data" -> Json.parse(res.body))
+    if(res.body.trim.nonEmpty) {
+      Json.obj("status" -> res.status, "data" -> Json.parse(res.body))
+    } else {
+      Json.obj("status" -> res.status)
+    }
   }
 
   private def withRecover[T](f: Future[T]): Future[T] = f.recover {
