@@ -1,4 +1,5 @@
 @import helpers._
+@import play.api.libs.json.Json
 @(message: String, apiList: Seq[ApiListItem], endpointList: Seq[ApiListItem], selectedApi: Option[ApiListItem], endpoint: Endpoint, requestHost: String)
 
 @url = @{
@@ -35,8 +36,12 @@
 
                                 @if(endpoint.http_verb == "POST" || endpoint.http_verb == "PUT") {
                                     <div class="input-body">
-                                        <label for="Body">Body</label>
-                                        <textarea id="Body" name="Body" placeholder="Enter a valid Body..." rows="10"></textarea>
+                                        <label for="Body">Example Body</label>
+                                        @if(endpoint.exampleBody.isDefined) {
+                                            <textarea id="Body" name="Body" placeholder="Enter a valid Body..." rows="10">@{Json.prettyPrint(endpoint.exampleBody.get)}</textarea>
+                                        } else {
+                                            <textarea id="Body" name="Body" placeholder="Enter a valid Body..." rows="10"></textarea>
+                                        }
                                     </div>
                                 }
                             </div>
@@ -72,17 +77,15 @@
         const form = document.querySelector("form");
         const formdata = new FormData(form);
         let jsonObject = {};
+        let url = '@{endpoint.baseUrl + url}';
         for (const [key, value] of formdata.entries()) {
             if (value.length > 0) {
                 jsonObject[key] = value;
             }
-        }
-        let url = '@{endpoint.baseUrl + url}';
-        for (const key in jsonObject) {
             if (jsonObject.hasOwnProperty(key) && jsonObject[key].length !== 0) {
                 url = url.replace(`{${key}}`, jsonObject[key]);
             } else {
-                url = url.replace(`${key}={${key}}`, jsonObject[key]);
+                url = url.replace(`${key}={${key}}`, "");
             }
         }
         let requestHeaders = {};

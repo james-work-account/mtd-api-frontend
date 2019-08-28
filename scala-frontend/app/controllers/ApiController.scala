@@ -59,23 +59,22 @@ class ApiController @Inject()(connector: ApiConnector, service: DocumentationSer
    *
    */
   def send(api: String, endpoint: String, method: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
-    request.body match {
-      case body =>
-        val urlO: Option[String] = (body \\ "url").headOption.map(_.as[String])
-        val headersO: Option[JsObject] = (body \\ "headers").headOption.flatMap(_.asOpt[JsObject])
-        val postOrPutBody = if(checkMethod(method)) (body \\ "body").headOption else None
-        println(scala.Console.YELLOW + urlO + scala.Console.RESET)
-        println(scala.Console.YELLOW + headersO + scala.Console.RESET)
-        println(scala.Console.YELLOW + postOrPutBody + scala.Console.RESET)
-        (urlO, headersO, postOrPutBody) match {
-          case (Some(url), Some(headers), optionalBody) =>
-            connector.sendRequest(url, method, optionalBody, headers).map {
-              res =>
-                println(scala.Console.YELLOW + res + scala.Console.RESET)
-                Ok(res)
-            }
-          case (_, _, _) => Future.successful(Redirect(routes.ApiController.endpointGet(api, endpoint)))
-        }
+    {
+      request.body match {
+        case body =>
+          val urlO: Option[String] = (body \\ "url").headOption.map(_.as[String])
+          val headersO: Option[JsObject] = (body \\ "headers").headOption.flatMap(_.asOpt[JsObject])
+          val postOrPutBody = if(checkMethod(method)) (body \\ "body").headOption else None
+          (urlO, headersO, postOrPutBody) match {
+            case (Some(url), Some(headers), optionalBody) =>
+              connector.sendRequest(url, method, optionalBody, headers).map(Ok(_))
+            case (_, _, _) => Future.successful(Redirect(routes.ApiController.endpointGet(api, endpoint)))
+          }
+      }
+    }.recover {
+      case ex =>
+        Logger.logger.error(ex.getMessage, ex)
+        InternalServerError(views.html.pages.internalServerError())
     }
   }
 
