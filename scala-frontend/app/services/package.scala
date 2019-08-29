@@ -1,4 +1,4 @@
-import models.{ApiListItem, Endpoint}
+import models.{ApiListItem, Endpoint, FullUserDetails}
 import org.jsoup.nodes.Document
 
 package object services {
@@ -8,6 +8,8 @@ package object services {
   case class EndpointsListOutcome(apis: ApisOutcome, endpoints: Seq[ApiListItem])
 
   case class EndpointOutcome(apis: ApisOutcome, endpoints: Seq[ApiListItem], endpoint: Endpoint)
+
+  type GenerateUserDetailsOutcome = FullUserDetails
 
   // Pretending I have a proper database
   var apis: Option[Seq[ApiListItem]] = None

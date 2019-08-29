@@ -1,4 +1,4 @@
-@(param: (String, String), endpoint: Endpoint, isHeaders: Boolean)
+@(param: (String, Any), endpoint: Endpoint, isHeaders: Boolean)
 
 @isGovTestScenario=@{param._1 == "Gov-Test-Scenario"}
     @gov=@{"Gov-Test-Scenario"}

@@ -1,6 +1,7 @@
 @import helpers._
 @import play.api.libs.json.Json
-@(message: String, apiList: Seq[ApiListItem], endpointList: Seq[ApiListItem], selectedApi: Option[ApiListItem], endpoint: Endpoint, requestHost: String)
+@import play.api.libs.json.JsObject
+@(title: String, defaults: Option[JsObject], apiList: Seq[ApiListItem], endpointList: Seq[ApiListItem], selectedApi: Option[ApiListItem], endpoint: Endpoint, requestHost: String)
 
 @url = @{
     if(endpoint.path.isDefined) {
@@ -13,7 +14,17 @@
 
 @params=@{endpoint.path_params ++ endpoint.query_params}
 
-@main(message, apiList, selectedApi.map(_.friendly_name)) {
+@getParam(param: (String, String)) = @{
+    defaults match {
+        case Some(js) => (js \\ param._1).length match {
+            case 1 => (param._1, (js \\ param._1).head.asOpt[String].getOrElse(""))
+            case x => param
+        }
+        case None => param
+    }
+}
+
+@main(title, apiList, selectedApi.map(_.friendly_name)) {
 
     @if(selectedApi.isDefined) {
         @navigation(selectedApi.get.name, endpointList, endpoint.endpoint_name)
@@ -31,7 +42,7 @@
                             <h3>Parameters:</h3>
                             <div class="inputs">
                                 @for(param <- params) {
-                                    @textbox(param, endpoint, isHeaders = false)
+                                    @textbox(getParam(param), endpoint, isHeaders = false)
                                 }
 
                                 @if(endpoint.http_verb == "POST" || endpoint.http_verb == "PUT") {
@@ -50,7 +61,7 @@
                             <h3>Headers:</h3>
                             <div class="inputs">
                                 @for(header <- endpoint.request_headers) {
-                                    @textbox(header, endpoint, isHeaders = true)
+                                    @textbox(getParam(header), endpoint, isHeaders = true)
                                 }
                             </div>
                         </section>

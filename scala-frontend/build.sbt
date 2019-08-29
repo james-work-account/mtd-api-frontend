@@ -10,7 +10,7 @@ resolvers += "Akka Snapshot Repository" at "https://repo.akka.io/snapshots/"
       
 scalaVersion := "2.12.2"
 
-libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice )
+libraryDependencies ++= Seq( jdbc , caffeine , ws , specs2 % Test , guice )
 
 libraryDependencies += "org.jsoup" % "jsoup" % "1.12.1"
 

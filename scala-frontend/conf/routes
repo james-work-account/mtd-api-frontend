@@ -1,9 +1,13 @@
 
-GET     /                           controllers.HomeController.index
-+nocsrf
+# Backend
 POST    /send                       controllers.ApiController.send(api: String, endpoint: String, method: String)
-GET     /:api                       controllers.ApiController.index(api: String)
-GET     /:api/:endpoint             controllers.ApiController.endpointGet(api: String, endpoint: String)
+GET     /generate                   controllers.GenerateController.index
+
+# Serve HTML
+GET     /                           controllers.HomeController.index
+GET     /api                           controllers.HomeController.index
+GET     /api/:api                       controllers.ApiController.index(api: String)
+GET     /api/:api/:endpoint             controllers.ApiController.endpointGet(api: String, endpoint: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

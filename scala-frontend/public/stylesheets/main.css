@@ -570,3 +570,23 @@ div.input-body textarea {
         width: 100%;
     }
 }
+/* GENERATE OAUTH */
+a.generate-auth {
+    border: none;
+    color: #000;
+    background: #fff;
+    font-size: 20px;
+    text-align: center;
+    text-decoration: none;
+    padding: 0.5em;
+    cursor: pointer;
+}
+a.generate-auth:visited {
+    color: #000;
+}
+a.generate-auth:disabled {
+    background: #888;
+    border: 1px solid #888;
+    color: #ccc;
+    cursor: unset;
+}

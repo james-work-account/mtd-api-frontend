@@ -2,8 +2,9 @@ package controllers
 
 import connectors.ApiConnector
 import javax.inject.{Inject, Singleton}
+import models.FullUserDetails
 import play.api.Logger
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{AbstractController, Action, AnyContent, AnyContentAsJson, ControllerComponents}
 import services.DocumentationService
 
@@ -14,19 +15,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ApiController @Inject()(connector: ApiConnector, service: DocumentationService, cc: ControllerComponents) extends AbstractController(cc) {
 
   def index(api: String): Action[AnyContent] = Action.async {
-    service.endpointList(api).map {
-      serviceOutcome =>
-        val apiList = serviceOutcome.apis
-        val message = apiList.find(_.name == api).map(_.friendly_name).getOrElse("")
-        val selectedApi = apiList.find(_.name == api)
-        val endpointList = serviceOutcome.endpoints
+    implicit request =>
+      service.endpointList(api).map {
+        serviceOutcome =>
+          val apiList = serviceOutcome.apis
+          val message = apiList.find(_.name == api).map(_.friendly_name).getOrElse("")
+          val selectedApi = apiList.find(_.name == api)
+          val endpointList = serviceOutcome.endpoints
 
-        Ok(views.html.pages.endpointList(message, apiList, endpointList, selectedApi))
-    }.recover {
-      case ex =>
-        Logger.logger.error(ex.getMessage, ex)
-        InternalServerError(views.html.pages.internalServerError())
-    }
+          Ok(views.html.pages.endpointList(message, apiList, endpointList, selectedApi))
+      }.recover {
+        case ex =>
+          Logger.logger.error(ex.getMessage, ex)
+          InternalServerError(views.html.pages.internalServerError())
+      }
 
   }
 
@@ -39,7 +41,8 @@ class ApiController @Inject()(connector: ApiConnector, service: DocumentationSer
         val endpointList = serviceOutcome.endpoints
         val endpoint = serviceOutcome.endpoint
 
-        Ok(views.html.pages.individualEndpoint(message, apiList, endpointList, selectedApi, endpoint, request.host))
+        val defaults: Option[JsObject] = request.session.get("Defaults").map(Json.parse).flatMap(_.asOpt[JsObject])
+        Ok(views.html.pages.individualEndpoint(message, defaults, apiList, endpointList, selectedApi, endpoint, request.host))
     }.recover {
       case ex =>
         Logger.logger.error(ex.getMessage, ex)

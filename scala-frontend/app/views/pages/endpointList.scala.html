@@ -1,7 +1,7 @@
 @import helpers._
-@(message: String, apiList: Seq[ApiListItem], endpointList: Seq[ApiListItem], selectedApi: Option[ApiListItem])
+@(title: String, apiList: Seq[ApiListItem], endpointList: Seq[ApiListItem], selectedApi: Option[ApiListItem])
 
-@main(message, apiList, selectedApi.map(_.friendly_name)) {
+@main(title, apiList, selectedApi.map(_.friendly_name)) {
 
     @if(selectedApi.isDefined) {
         @navigation(selectedApi.get.name, endpointList)
