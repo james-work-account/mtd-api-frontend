@@ -584,7 +584,7 @@ a.generate-auth {
 a.generate-auth:visited {
     color: #000;
 }
-a.generate-auth:disabled {
+a.generate-auth:active, a.generate-auth:focus {
     background: #888;
     border: 1px solid #888;
     color: #ccc;

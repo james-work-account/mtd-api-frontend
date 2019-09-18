@@ -16,15 +16,17 @@ import scala.util.{Failure, Success, Try}
 
 @ImplementedBy(classOf[DocumentationServiceImpl])
 trait DocumentationService {
+  def info(msg: String): Unit = Logger.logger.info(s"[DocumentationService] $msg")
   def apiList: Future[ApisOutcome]
-
   def endpointList(api: String): Future[EndpointsListOutcome]
-
   def endpoint(api: String, endpoint: String): Future[EndpointOutcome]
 }
 
 class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) extends DocumentationService {
   override def apiList: Future[ApisOutcome] = {
+
+    info(s"[apiList] - Getting list of APIs")
+
     if (apis.isDefined) Future.successful(apis.get) else {
       for {
         doc: Document <- connector.getApiList
@@ -42,9 +44,11 @@ class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) exte
   }
 
   override def endpointList(api: String): Future[EndpointsListOutcome] = {
+
+    info(s"[endpointList] - Getting information for [$api]")
+
     val apiListFuture: Future[ApisOutcome] = if (apis.isDefined) Future.successful(apis.get) else apiList
     val endpointListFuture: Future[Seq[ApiListItem]] = if (endpointsList.get(api).isDefined) Future.successful(endpointsList(api)) else {
-      Logger.logger.info(s"Getting information for [$api]")
       val document: Future[Document] = getFutureDocument(api)
       document.flatMap {
         doc =>
@@ -71,6 +75,9 @@ class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) exte
   }
 
   override def endpoint(api: String, endpoint: String): Future[EndpointOutcome] = {
+
+    info(s"[endpoint] - Getting information for [$api] - [$endpoint]")
+
     val apiListFuture: Future[ApisOutcome] = if (apis.isDefined) Future.successful(apis.get) else apiList
     val endpointListFuture: Future[Seq[ApiListItem]] = if (endpointsList.get(api).isDefined) Future.successful(endpointsList(api)) else endpointList(api).map(_.endpoints)
     val endpointModelFuture: Future[Endpoint] = {

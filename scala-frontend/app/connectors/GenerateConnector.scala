@@ -6,6 +6,7 @@ import java.util
 import com.google.inject.{ImplementedBy, Inject}
 import javax.inject.Singleton
 import models.NewUser
+import models.errors.BadUserException
 import org.jsoup.{Connection, Jsoup}
 import play.api.Logger
 import play.api.libs.json.{JsArray, Json, Reads}
@@ -14,10 +15,9 @@ import play.api.libs.ws.WSClient
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class BadUserException(msg: String) extends Exception(msg)
-
 @ImplementedBy(classOf[GenerateConnectorImpl])
 trait GenerateConnector {
+  def info(msg: String): Unit = Logger.logger.info(s"[GenerateConnector] $msg")
   def generateUser(userType: String): Future[NewUser]
   def grantAccess(userId: String, password: String): Future[String]
   def requestAccessToken(oauthToken: String): Future[String]
@@ -29,6 +29,7 @@ class GenerateConnectorImpl @Inject()(ws: WSClient) extends GenerateConnector {
   private val serviceArray = Seq("mtd-income-tax", "mtd-vat")
 
   override def generateUser(userType: String): Future[NewUser] = {
+    info(s"[generateUser] - Generating new user of type [$userType]")
     val url = s"https://test-api.service.hmrc.gov.uk/create-test-user/$userType"
     val body = Json.obj("serviceNames" -> serviceArray)
     val headers = Seq(
@@ -51,6 +52,7 @@ class GenerateConnectorImpl @Inject()(ws: WSClient) extends GenerateConnector {
   }
 
   override def grantAccess(userId: String, password: String): Future[String] = {
+    info(s"[grantAccess] - Granting access to new user [$userId]")
     val USER_AGENT = "\"Mozilla/5.0 (Windows NT\" +\n          \" 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2\""
     val saScopes = "read:self-assessment+write:self-assessment+write:sent-invitations"
     val vatScopes = "read:vat+write:vat+write:sent-invitations"
@@ -110,6 +112,7 @@ class GenerateConnectorImpl @Inject()(ws: WSClient) extends GenerateConnector {
   }
 
   override def requestAccessToken(oauthToken: String): Future[String] = {
+    info(s"[requestAccessToken] Requesting access token")
     ws.url("https://test-www.tax.service.gov.uk/oauth/token").post(Json.parse(
       s"""
          |{

@@ -1,4 +1,4 @@
-import models.errors.ConnectorError
+import models.errors.ConnectorException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.Logger
@@ -64,7 +64,7 @@ package object connectors {
   private def withRecover[T](f: Future[T]): Future[T] = f.recover {
     case ex =>
       Logger.logger.error(ex.getMessage, ex)
-      throw ConnectorError(ex.getMessage, ex)
+      throw ConnectorException(ex.getMessage, ex)
   }
 
 }

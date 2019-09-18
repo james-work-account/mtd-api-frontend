@@ -13,9 +13,9 @@
     @if(isGovTestScenario) {
         <input type="text" id="@param._1" name="@param._1" placeholder="Enter or select a valid @{param._1}..." @if(isHeaders) {class='left'} />
         <ul id="scenarios">
-            <li onclick="changeSelectedScenario('@param', '')">&lt;CLEAR&gt;</li>
+            <li onclick="changeSelectedScenario('@param._1', '')">&lt;CLEAR&gt;</li>
             @for(scenario <- endpoint.gov_test_scenarios) {
-                <li onclick="changeSelectedScenario('@param', '@scenario')">@scenario</li>
+                <li onclick="changeSelectedScenario('@param._1', '@scenario')">@scenario</li>
             }
         </ul>
     } else {

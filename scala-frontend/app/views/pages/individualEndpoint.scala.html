@@ -5,7 +5,7 @@
 
 @url = @{
     if(endpoint.path.isDefined) {
-        val queryParams = endpoint.query_params
+        val queryParams = endpoint.query_params.map(_._1)
                 .map(el => s"$el={$el}")
                 .mkString("&")
         if(queryParams.length > 0) s"${endpoint.path.get}?${queryParams}" else s"${endpoint.path.get}"
