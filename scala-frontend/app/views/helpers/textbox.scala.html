@@ -1,0 +1,24 @@
+@(param: (String, Any), endpoint: Endpoint, isHeaders: Boolean)
+
+@isGovTestScenario=@{param._1 == "Gov-Test-Scenario"}
+    @gov=@{"Gov-Test-Scenario"}
+
+<div class="input">
+    <label for="@param._1" @if(isGovTestScenario) {onclick="toggleGovTest()" }>
+        @param._1
+        @if(isGovTestScenario) {
+            <i id="icon" class="fas fa-caret-down"></i>
+        }
+    </label>
+    @if(isGovTestScenario) {
+        <input type="text" id="@param._1" name="@param._1" placeholder="Enter or select a valid @{param._1}..." @if(isHeaders) {class='left'} />
+        <ul id="scenarios">
+            <li onclick="changeSelectedScenario('@param._1', '')">&lt;CLEAR&gt;</li>
+            @for(scenario <- endpoint.gov_test_scenarios) {
+                <li onclick="changeSelectedScenario('@param._1', '@scenario')">@scenario</li>
+            }
+        </ul>
+    } else {
+        <input type="text" id="@param._1" name="@param._1"  value="@param._2" placeholder="Enter a valid @param._1" @if(isHeaders) {class="left"}/>
+    }
+</div>

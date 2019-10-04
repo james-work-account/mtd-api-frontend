@@ -2,6 +2,7 @@ const axios = require('axios')
 
 const getResponse = async (method, body, headers) => {
   const url = body.url
+
   try {
     if (method === "POST") {
       return await axios.post(url, JSON.parse(body["Body"]), {

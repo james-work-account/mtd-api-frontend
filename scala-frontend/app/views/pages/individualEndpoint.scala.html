@@ -1,0 +1,121 @@
+@import helpers._
+@import play.api.libs.json.Json
+@import play.api.libs.json.JsObject
+@(title: String, defaults: Option[JsObject], apiList: Seq[ApiListItem], endpointList: Seq[ApiListItem], selectedApi: Option[ApiListItem], endpoint: Endpoint, requestHost: String)
+
+@url = @{
+    if(endpoint.path.isDefined) {
+        val queryParams = endpoint.query_params.map(_._1)
+                .map(el => s"$el={$el}")
+                .mkString("&")
+        if(queryParams.length > 0) s"${endpoint.path.get}?${queryParams}" else s"${endpoint.path.get}"
+    } else ""
+}
+
+@params=@{endpoint.path_params ++ endpoint.query_params}
+
+@getParam(param: (String, String)) = @{
+    defaults match {
+        case Some(js) => (js \\ param._1).length match {
+            case 1 => (param._1, (js \\ param._1).head.asOpt[String].getOrElse(""))
+            case x => param
+        }
+        case None => param
+    }
+}
+
+@main(title, apiList, selectedApi.map(_.friendly_name)) {
+
+    @if(selectedApi.isDefined) {
+        @navigation(selectedApi.get.name, endpointList, endpoint.endpoint_name)
+        <div id="content" class="page">
+            <section class="body">
+                <section class="heading">
+                    <h1>@{
+                        endpoint.endpoint_name
+                    }</h1>
+                    <h2>@url</h2>
+                </section>
+                <form id="form-input" class="input-data">
+                    <div>
+                        <section class="params">
+                            <h3>Parameters:</h3>
+                            <div class="inputs">
+                                @for(param <- params) {
+                                    @textbox(getParam(param), endpoint, isHeaders = false)
+                                }
+
+                                @if(endpoint.http_verb == "POST" || endpoint.http_verb == "PUT") {
+                                    <div class="input-body">
+                                        <label for="Body">Example Body</label>
+                                        @if(endpoint.exampleBody.isDefined) {
+                                            <textarea id="Body" name="Body" placeholder="Enter a valid Body..." rows="10">@{Json.prettyPrint(endpoint.exampleBody.get)}</textarea>
+                                        } else {
+                                            <textarea id="Body" name="Body" placeholder="Enter a valid Body..." rows="10"></textarea>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </section>
+                        <section class="headers">
+                            <h3>Headers:</h3>
+                            <div class="inputs">
+                                @for(header <- endpoint.request_headers) {
+                                    @textbox(getParam(header), endpoint, isHeaders = true)
+                                }
+                            </div>
+                        </section>
+                    </div>
+                    <button type="submit">Send Request</button>
+                </form>
+                <output form="form-input" name="form-output">
+                    <pre><code>{}</code></pre>
+                </output>
+            </section>
+        </div>
+    } else {
+        <div id="content" class="home">
+            <h1>An error has occurred. Please try again later.</h1>
+        </div>
+    }
+
+}
+
+<script type="application/javascript">
+    document.getElementById("form-input").addEventListener("submit", submitRequest);
+    async function submitRequest(e) {
+        e.preventDefault();
+        const form = document.querySelector("form");
+        const formdata = new FormData(form);
+        let jsonObject = {};
+        let url = '@{endpoint.baseUrl + url}';
+        for (const [key, value] of formdata.entries()) {
+            if (value.length > 0) {
+                jsonObject[key] = value;
+            }
+            if (jsonObject.hasOwnProperty(key) && jsonObject[key].length !== 0) {
+                url = url.replace(`{${key}}`, jsonObject[key]);
+            } else {
+                url = url.replace(`${key}={${key}}`, "");
+            }
+        }
+        let requestHeaders = {};
+        for (const [key, value] of Object.entries(jsonObject)) {
+            if(document.querySelector(`.headers #${key}`)) {
+                requestHeaders[key] = value
+            }
+        }
+        const body = jsonObject["Body"] ? {url, headers: requestHeaders, body: JSON.parse(jsonObject["Body"])} : {url, headers: requestHeaders};
+        const postBody = {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const route = decodeURI('http://localhost:9000/send?api=@{selectedApi.map(_.name).getOrElse("")}&endpoint=@{endpoint.name}&method=@{endpoint.http_verb}');
+        const res = await fetch(route, postBody);
+        const json = await res.json();
+        document.querySelector("output[name='form-output'] pre code").innerHTML = JSON.stringify(json, null, 2)
+    }
+</script>

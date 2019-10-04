@@ -1,0 +1,17 @@
+@import helpers._
+@(title: String, apiList: Seq[ApiListItem], endpointList: Seq[ApiListItem], selectedApi: Option[ApiListItem])
+
+@main(title, apiList, selectedApi.map(_.friendly_name)) {
+
+    @if(selectedApi.isDefined) {
+        @navigation(selectedApi.get.name, endpointList)
+        <div id="content" class="page">
+            <h1>Now select an endpoint...</h1>
+        </div>
+    } else {
+        <div id="content" class="home">
+            <h1>An error has occurred. Please try again later.</h1>
+        </div>
+    }
+
+}
