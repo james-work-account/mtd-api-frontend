@@ -1,6 +1,5 @@
 package connectors
 
-import java.nio.charset.StandardCharsets
 import java.util
 
 import com.google.inject.{ImplementedBy, Inject}
@@ -9,11 +8,11 @@ import models.NewUser
 import models.errors.BadUserException
 import org.jsoup.{Connection, Jsoup}
 import play.api.Logger
-import play.api.libs.json.{JsArray, Json, Reads}
+import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @ImplementedBy(classOf[GenerateConnectorImpl])
 trait GenerateConnector {
@@ -56,7 +55,7 @@ class GenerateConnectorImpl @Inject()(ws: WSClient) extends GenerateConnector {
     val USER_AGENT = "\"Mozilla/5.0 (Windows NT\" +\n          \" 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2\""
     val saScopes = "read:self-assessment+write:self-assessment+write:sent-invitations"
     val vatScopes = "read:vat+write:vat+write:sent-invitations"
-    val firstPageUrl = s"https://test-www.tax.service.gov.uk/oauth/authorize?client_id=5Z9oOif4hw8hlZlWXIwUH0YBwKsa&scope=${saScopes}+${vatScopes}&response_type=code&redirect_uri=http://localhost:9000&state=12345"
+    val firstPageUrl = s"https://test-www.tax.service.gov.uk/oauth/authorize?client_id=5Z9oOif4hw8hlZlWXIwUH0YBwKsa&scope=$saScopes+$vatScopes&response_type=code&redirect_uri=http://localhost:9000&state=12345"
 
     Future {
       // First page - start

@@ -14,6 +14,6 @@ libraryDependencies ++= Seq( jdbc , caffeine , ws , specs2 % Test , guice )
 
 libraryDependencies += "org.jsoup" % "jsoup" % "1.12.1"
 
-unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
+unmanagedResourceDirectories in Test +=  baseDirectory ( _ /"target/web/public/test" ).value
 
       

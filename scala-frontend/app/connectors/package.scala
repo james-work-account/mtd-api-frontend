@@ -3,10 +3,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
+import play.api.libs.ws.{WSClient, WSResponse}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 package object connectors {
 

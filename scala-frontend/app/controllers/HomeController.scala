@@ -1,9 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.FullUserDetails
 import play.api.Logger
-import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import services.DocumentationService
 

@@ -5,8 +5,8 @@ import connectors.GenerateConnector
 import models.FullUserDetails
 import play.api.Logger
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @ImplementedBy(classOf[GenerateServiceImpl])
 trait GenerateService {

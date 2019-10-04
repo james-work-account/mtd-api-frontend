@@ -3,7 +3,7 @@ package controllers
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, Action, AnyContent, Call, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.GenerateService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,7 +17,7 @@ class GenerateController @Inject()(service: GenerateService, cc: ControllerCompo
           val refererOpt = request.headers.get("Referer")
           refererOpt match {
             case Some(referer) =>
-              Redirect(referer).addingToSession(("Defaults" -> Json.toJson(res).toString()))
+              Redirect(referer).addingToSession("Defaults" -> Json.toJson(res).toString())
             case None => Ok(Json.prettyPrint(Json.toJson(res)))
           }
 

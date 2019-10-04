@@ -2,14 +2,13 @@ package controllers
 
 import connectors.ApiConnector
 import javax.inject.{Inject, Singleton}
-import models.FullUserDetails
 import play.api.Logger
 import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.mvc.{AbstractController, Action, AnyContent, AnyContentAsJson, ControllerComponents}
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.DocumentationService
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @Singleton
 class ApiController @Inject()(connector: ApiConnector, service: DocumentationService, cc: ControllerComponents) extends AbstractController(cc) {

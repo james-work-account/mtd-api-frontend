@@ -5,14 +5,14 @@ import connectors.DocumentationConnector
 import javax.inject.Inject
 import models.{ApiListItem, Endpoint}
 import org.jsoup.nodes.{Document, Element}
-import org.jsoup.select.{Elements, NodeFilter, NodeVisitor}
+import org.jsoup.select.Elements
 import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
 
 import scala.annotation._
-import scala.concurrent.Future
+import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.Future
 
 @ImplementedBy(classOf[DocumentationServiceImpl])
 trait DocumentationService {
@@ -32,8 +32,8 @@ class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) exte
         doc: Document <- connector.getApiList
       } yield {
         val els = doc.select("#content td > a[href*=/service/]")
-        val friendly_names = els.eachText().toArray.toSeq.map(_.toString)
-        val names = els.eachAttr("href").toArray.toSeq.map(_.toString()).map(_.replaceAll("/.+/docs/api/service/(.*)/.+", "$1"))
+        val friendly_names = els.eachText().asScala
+        val names = els.eachAttr("href").asScala.map(_.replaceAll("/.+/docs/api/service/(.*)/.+", "$1"))
         val list = (names zip friendly_names).map {
           case (n, fn) => ApiListItem(n, fn)
         }
@@ -55,8 +55,8 @@ class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) exte
           Future(doc.select("#section .section div.endpoint_group > div > div > div.persist-area"))
             .map {
               els =>
-                val friendly_names = els.select("div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > span:nth-child(2)").eachText().toArray.toSeq.map(_.toString())
-                val names = els.select("div[id]").eachAttr("id").toArray.toSeq.map(_.toString())
+                val friendly_names = els.select("div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > span:nth-child(2)").eachText().asScala
+                val names = els.select("div[id]").eachAttr("id").asScala
                 val l: Seq[ApiListItem] = (names zip friendly_names).map {
                   case (n, fn) => ApiListItem(n, fn)
                 }
@@ -90,7 +90,7 @@ class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) exte
           doc <- document
           splitEndpoint = endpoint.split("-")
           accordionSelector = s"${splitEndpoint.init.mkString("-")}_${splitEndpoint.last}_accordion"
-          accordion = doc.select(s"[id*='${accordionSelector}']")
+          accordion = doc.select(s"[id*='$accordionSelector']")
           path <- pathFuture(accordion)
         } yield {
           val api_friendly_name: String = doc.title().split(" - ").headOption.getOrElse("")
@@ -103,37 +103,36 @@ class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) exte
 
           val path_params: Seq[(String, String)] = {
             // parameter
-            val p: Seq[String] = endpointSelector.select(s"#request-parameters_${endpoint} > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(1) > div:nth-child(1) > div:nth-child(1)").eachText().toArray.toSeq.map(_.toString)
+            val p: Seq[String] = endpointSelector.select(s"#request-parameters_$endpoint > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(1) > div:nth-child(1) > div:nth-child(1)").eachText().asScala
             // example (good luck refactoring...)
-            val e: Seq[String] = selectExample(endpointSelector, s"#request-parameters_${endpoint} > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(2) > div:nth-child(1)")
+            val e: Seq[String] = selectExample(endpointSelector, s"#request-parameters_$endpoint > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(2) > div:nth-child(1)")
 
             p zip e
           }
 
           val query_params: Seq[(String, String)] = {
-            val p = endpointSelector.select(s"#query-parameters_${endpoint} > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(1) > div:nth-child(1) > div:nth-child(1)").eachText().toArray.toSeq.map(_.toString)
-            val e = selectExample(endpointSelector, s"#query-parameters_${endpoint} > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(2) > div:nth-child(1) p")
+            val p = endpointSelector.select(s"#query-parameters_$endpoint > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(1) > div:nth-child(1) > div:nth-child(1)").eachText().asScala
+            val e = selectExample(endpointSelector, s"#query-parameters_$endpoint > table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(2) > div:nth-child(1) p")
 
             p zip e
           }
           val request_headers: Seq[(String, String)] = {
             val h = endpointSelector.select("section#request-headers").first() // Documentation has more than one element with the ID `request-headers` (against convention) so need to select only the fist one
-              .select(" table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(1) > div:nth-child(1) > div:nth-child(1)").eachText().toArray.toSeq.map(_.toString)
+              .select(" table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(1) > div:nth-child(1) > div:nth-child(1)").eachText().asScala
             val e = endpointSelector.select("section#request-headers").first()
               .select(" table:nth-child(2) > tbody:nth-child(3) > tr > td:nth-child(2)")
-              .toArray.toSeq.map {
-              x =>
-                val el = x.asInstanceOf[Element]
+              .asScala.map {
+              el =>
                 // The way that the Authorization header is placed in the documentation is inconsistent with the other headers
                 // Therefore we need to find the header example in one of two ways
                 if (!el.select("div:nth-child(1) code").isEmpty) el.select("div:nth-child(1) code").text() else {
-                  el.select("code").eachText().toArray.toSeq.map(_.toString).find(_.contains("Bearer")).getOrElse("")
+                  el.select("code").eachText().asScala.find(_.contains("Bearer")).getOrElse("")
                 }
             }
             h zip e
           }
           val gov_test_scenarios: Seq[String] = if (request_headers.map(_._1).contains("Gov-Test-Scenario")) {
-            doc.select(s"#sandbox-data_${endpoint} > table > tbody tr > td:nth-child(1)").eachText().toArray.toSeq.map(_.toString)
+            doc.select(s"#sandbox-data_$endpoint > table > tbody tr > td:nth-child(1)").eachText().asScala
           } else {
             Seq()
           }
@@ -178,16 +177,16 @@ class DocumentationServiceImpl @Inject()(connector: DocumentationConnector) exte
 
   private def selectExample(endpointSelector: Element, input: String): Seq[String] = endpointSelector
     .select(input)
-    .toArray.toSeq.map(_.asInstanceOf[Element])
+    .asScala
     .map(
       _.select("p")
-        .eachText().toArray.toSeq.map(_.toString)
+        .eachText().asScala
         .map(t => if (t.contains("For example")) t else "")
     ).map(_.filter(_.nonEmpty)).map(_.headOption.getOrElse("")).map(_.replaceAll("For example:", "").trim)
 
   private def getFutureDocument(api: String): Future[Document] = {
-    val pageOption = (apiPages.get(api))
-    val fd = (if (pageOption.isDefined) Future.successful(pageOption.get.asInstanceOf[Document]) else connector.getApiEndpoint(api))
+    val pageOption = apiPages.get(api)
+    val fd = if (pageOption.isDefined) Future.successful(pageOption.get) else connector.getApiEndpoint(api)
 
     for {
       doc <- fd
